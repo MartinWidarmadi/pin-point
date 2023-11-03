@@ -2,17 +2,18 @@
   <!-- login view container -->
   <div class="mt-20">
     <div
-      class="pt-5 pb-10 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto flex flex-col gap-4 items-center border-black border-solid border-2 rounded-sm"
+      class="flex flex-col items-center max-w-xs gap-4 pt-5 pb-10 mx-auto border-2 border-black border-solid rounded-sm sm:max-w-sm md:max-w-md lg:max-w-lg p"
     >
-      <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold">Pointhub</h1>
-      <h3 class="md:text-2xl sm:text-xl text-lg lg:text-3xl">Sign in to your account</h3>
+      <h1 class="text-4xl font-bold sm:text-5xl md:text-6xl lg:text-7xl">Pointhub</h1>
+      <h3 class="text-lg md:text-2xl sm:text-xl lg:text-3xl">Sign in to your account</h3>
+      <div v-show="isVerified == -1" class="text-red-500">Wrong username or password</div>
       <!-- username or email input -->
       <FormField
         :id="'username'"
         :label="'Username Or Email'"
         :type="'text'"
         :placeholder="'Username'"
-        :v-model="user"
+        v-model="user"
       />
       <!-- password input -->
       <FormField
@@ -20,6 +21,7 @@
         :label="'Password'"
         :type="'password'"
         :placeholder="'Password'"
+        v-model="password"
       />
       <!-- remember me and forgot password container -->
       <div class="flex justify-between items-center w-52 md:w-64 lg:w-[19rem]">
@@ -35,9 +37,9 @@
       </div>
 
       <!-- sign in button -->
-      <ButtonBlue :text="'Sign In'" class="mt-4 md:mt-8"></ButtonBlue>
+      <ButtonBlue :text="'Sign In'" class="mt-4 md:mt-8" @click.prevent="login"></ButtonBlue>
 
-      <p class="lg:text-xl md:text-lg sm:text-md text-sm">Or Continue with</p>
+      <p class="text-sm lg:text-xl md:text-lg sm:text-md">Or Continue with</p>
 
       <!-- google sign in button -->
       <ButtonBlue :text="'Sign In With Google'"></ButtonBlue>
@@ -48,15 +50,25 @@
 <script setup lang="ts">
 import FormField from '@/components/FormField.vue'
 import ButtonBlue from '@/components/ButtonBlue.vue'
-import { useLoginStore } from '@/stores/login'
-import { storeToRefs } from 'pinia'
+import { useAuthStore } from '@/stores/auth'
 import { ref } from 'vue'
+import router from '@/router'
 
-const loginStore = useLoginStore()
+const authStore = useAuthStore()
 
 const user = ref('')
 const password = ref('')
+const isVerified = ref(0)
 
-const { username, role } = storeToRefs(loginStore)
-const { userData } = loginStore
+const login = (): void => {
+  authStore.login(user.value, password.value)
+  if (authStore.isLogin == false) {
+    isVerified.value = -1
+    console.log('Wrong username or password', authStore.isLogin)
+  } else {
+    isVerified.value = 1
+    console.log(user, password, authStore.isLogin)
+    router.push({ name: 'home' })
+  }
+}
 </script>
