@@ -2,7 +2,7 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useUserStore = defineStore('user', () => {
-  const userData = [
+  const authData = [
     {
       username: 'admin',
       password: 'admin',
@@ -15,5 +15,7 @@ export const useUserStore = defineStore('user', () => {
     }
   ]
 
-  return { userData }
+  const userData: object[] = []
+
+  return { authData, userData }
 })

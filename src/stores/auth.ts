@@ -9,7 +9,7 @@ export const useAuthStore = defineStore('auth', () => {
   const userStore = useUserStore()
 
   const login = (name: string, password: string): void => {
-    userStore.userData.forEach((user) => {
+    userStore.authData.forEach((user: any) => {
       if (user.username === name && user.password === password) {
         username.value = user.username
         role.value = user.roles
