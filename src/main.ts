@@ -2,6 +2,8 @@ import './assets/main.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import Toast from 'vue-toastification'
+import 'vue-toastification/dist/index.css'
 
 import App from './App.vue'
 import router from './router'
@@ -17,7 +19,8 @@ import {
   faCalendar,
   faChevronDown,
   faCamera,
-  faXmark
+  faXmark,
+  faCircleUser
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add(
@@ -29,7 +32,8 @@ library.add(
   faCalendar,
   faChevronDown,
   faCamera,
-  faXmark
+  faXmark,
+  faCircleUser
 )
 
 const app = createApp(App)
@@ -37,6 +41,7 @@ const app = createApp(App)
 // app.use(Vue3Geolocation)
 app.use(createPinia())
 app.use(router)
+app.use(Toast)
 
 app.component('font-awesome-icon', FontAwesomeIcon)
 

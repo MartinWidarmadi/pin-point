@@ -6,7 +6,7 @@
     >
       <h1 class="text-4xl font-bold sm:text-5xl md:text-6xl lg:text-7xl">Pointhub</h1>
       <h3 class="text-lg md:text-2xl sm:text-xl lg:text-3xl">Sign in to your account</h3>
-      <div v-show="isVerified == -1" class="text-red-500">Wrong username or password</div>
+      <div v-if="isVerified == -1" class="text-red-500">Wrong username or password</div>
       <!-- username or email input -->
       <FormField
         :id="'username'"
@@ -64,10 +64,9 @@ const login = (): void => {
   authStore.login(user.value, password.value)
   if (authStore.isLogin == false) {
     isVerified.value = -1
-    console.log('Wrong username or password', authStore.isLogin)
+    console.log('Wrong username or password')
   } else {
     isVerified.value = 1
-    console.log(user, password, authStore.isLogin)
     router.push({ name: 'home' })
   }
 }

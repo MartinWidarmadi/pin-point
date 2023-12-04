@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col w-full gap-2">
-    <h1 class="text-3xl font-bold">Tag Location</h1>
+  <div class="flex flex-col w-full gap-3 md:gap-2">
+    <h1 class="text-lg font-bold lg:text-3xl md:text-2xl sm:text-xl">Tag Location</h1>
     <div class="p-2 border-2 border-black">
       <div
         class="mb-2"
@@ -9,7 +9,7 @@
         :key="data.id"
         @change.prevent="storeTagData"
       >
-        <div>
+        <div class="flex items-center">
           <input
             :id="data.id"
             type="radio"
@@ -22,7 +22,7 @@
         </div>
       </div>
       <button
-        class="border-black border-[1px] p-1 text-sm rounded-sm bg-gray-400"
+        class="border-black border-[1px] p-1 text-sm rounded-sm bg-gray-400 w-full"
         @click.prevent="showModal"
       >
         New Tag

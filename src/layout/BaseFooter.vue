@@ -1,6 +1,6 @@
 <template>
   <footer
-    class="sticky bottom-0 z-40 max-w-lg mx-auto shadow-[0_-1px_2px_0_rgba(0,0,0,0.05)] shadow-black bg-white"
+    class="sticky bottom-0 z-40 max-w-md md:max-w-lg mx-auto shadow-[0_-1px_2px_0_rgba(0,0,0,0.05)] shadow-black bg-white"
   >
     <div
       class="relative flex items-center justify-between px-4 py-2 sm:py-3 lg:px-8 lg:py-4 sm:px-6"

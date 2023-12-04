@@ -1,13 +1,13 @@
 <template>
-  <div class="flex flex-col w-full gap-2">
-    <h1 class="text-3xl font-bold">Photo</h1>
+  <div class="flex flex-col w-full gap-3 md:gap-2">
+    <h1 class="text-lg font-bold lg:text-3xl md:text-2xl sm:text-xl">Photo</h1>
 
     <!-- Camera selection dropdown -->
     <Listbox v-model="selectedCamera">
       <ListboxButton
         class="flex justify-between w-full p-2 text-left border-2 border-black rounded-sm"
       >
-        <p>{{ selectedCamera.name }}</p>
+        <p class="text-md md:text-lg">{{ selectedCamera.name }}</p>
         <p><font-awesome-icon :icon="['fas', 'chevron-down']"></font-awesome-icon></p>
       </ListboxButton>
       <ListboxOptions class="w-full border-2 border-black shadow-lg inset-4">
@@ -24,12 +24,12 @@
     </Listbox>
 
     <!-- Camera preview or icon -->
-    <div class="flex items-center justify-center min-w-full min-h-[20rem] border-black border-2">
+    <div class="flex items-center justify-center h-auto min-w-full border-2 border-black">
       <p v-if="!cameraIsOn">
         <font-awesome-icon :icon="['fas', 'camera']" class="text-7xl"></font-awesome-icon>
       </p>
       <p v-else>
-        <video ref="videoElement" class="w-full h-full" autoplay></video>
+        <video ref="videoElement" class="w-full h-auto" autoplay></video>
       </p>
     </div>
 
@@ -38,7 +38,7 @@
 
     <!-- Capture button -->
     <button
-      class="min-w-full p-2 text-xl text-center text-white bg-blue-800"
+      class="min-w-full p-1 text-center text-white bg-blue-800 md:p-2 text-md sm:text-lg md:text-xl"
       @click.prevent="captureImage"
     >
       Capture
@@ -48,7 +48,7 @@
 
 <script setup lang="ts">
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/vue'
-import { onMounted, onUnmounted, ref, watchEffect } from 'vue'
+import { onBeforeUnmount, onMounted, ref, watchEffect, defineEmits } from 'vue'
 
 // Constants
 const cameras = [
@@ -61,12 +61,13 @@ const selectedCamera = ref(cameras[0])
 const cameraIsOn = ref(false)
 const videoElement = ref<HTMLVideoElement | null>(null)
 const capturedImage = ref<string | null>(null)
+const emit = defineEmits(['storePhotoUrl'])
 
 // Lifecycle hooks
 onMounted(() => {
   startCamera()
 })
-onUnmounted(() => {
+onBeforeUnmount(() => {
   stopCamera()
 })
 
@@ -95,6 +96,7 @@ const captureImage = () => {
       canvas.height = videoElement.value.videoHeight
       context.drawImage(videoElement.value, 0, 0, canvas.width, canvas.height)
       capturedImage.value = canvas.toDataURL('image/png')
+      emit('storePhotoUrl', capturedImage.value)
     }
   }
 }

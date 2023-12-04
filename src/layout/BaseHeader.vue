@@ -1,5 +1,5 @@
 <template>
-  <header class="sticky top-0 z-40 max-w-lg mx-auto bg-white shadow-sm shadow-black">
+  <header class="sticky top-0 z-40 max-w-md mx-auto bg-white shadow-sm md:max-w-lg shadow-black">
     <div
       class="relative flex items-center justify-between px-4 py-2 sm:py-3 lg:px-8 lg:py-4 sm:px-6"
     >

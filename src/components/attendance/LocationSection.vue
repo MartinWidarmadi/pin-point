@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col w-full gap-2">
+  <div class="flex flex-col w-full gap-3 md:gap-2">
     <h1 class="text-3xl font-bold">Location</h1>
     <div ref="mapDiv" id="map" class="w-full h-64"></div>
   </div>

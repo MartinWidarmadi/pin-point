@@ -6,18 +6,14 @@ export const useMapStore = defineStore('map', () => {
     const coords = ref({ latitude: 0, longitude: 0 })
     const isSupported = 'navigator' in window && 'geolocation' in navigator
 
-    let watcher: number | null = null
     onMounted(() => {
       if (isSupported) {
-        watcher = navigator.geolocation.watchPosition((position) => {
+        const watcher = navigator.geolocation.watchPosition((position: GeolocationPosition) => {
           coords.value = position.coords
         })
-      }
-    })
-
-    onUnmounted(() => {
-      if (watcher) {
-        navigator.geolocation.clearWatch(watcher)
+        onUnmounted(() => {
+          navigator.geolocation.clearWatch(watcher)
+        })
       }
     })
 

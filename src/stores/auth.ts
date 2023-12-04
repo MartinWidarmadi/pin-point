@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import { useUserStore } from './userData'
+import { useUserStore } from './user'
 
 export const useAuthStore = defineStore('auth', () => {
   const username = ref('')

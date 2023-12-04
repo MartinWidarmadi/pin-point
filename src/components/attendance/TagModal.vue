@@ -2,16 +2,16 @@
   <div
     class="fixed top-0 z-50 flex items-center justify-center w-screen h-screen bg-black bg-opacity-80 overscroll-none"
   >
-    <div class="flex flex-col w-full max-w-xl gap-2 mx-auto bg-white rounded-sm">
+    <div class="flex flex-col w-full max-w-xl gap-2 mx-4 bg-white rounded-sm md:mx-auto">
       <div class="flex justify-between p-5 shadow-md">
         <h1 class="text-3xl font-bold">New Tag</h1>
         <font-awesome-icon
-          :icon="['fas', 'xmark']"
+          :icon="['fas', 'times']"
           class="text-3xl cursor-pointer"
           @click.prevent="showModal"
         />
       </div>
-      <div class="flex flex-col gap-10 p-5">
+      <div class="flex flex-col gap-6 p-5">
         <div class="flex flex-col gap-2">
           <h1 class="text-3xl font-semibold">Name</h1>
           <input
