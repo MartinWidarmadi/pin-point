@@ -3,12 +3,14 @@ import { defineStore } from 'pinia'
 export const useUserStore = defineStore('user', () => {
   const authData = [
     {
-      username: 'admin',
+      email: 'admin@email.com',
+      username: 'Admin',
       password: 'admin',
       roles: 'admin'
     },
     {
-      username: 'user',
+      email: 'hafiz@email.com',
+      username: 'Hafiz',
       password: 'user',
       roles: 'user'
     }

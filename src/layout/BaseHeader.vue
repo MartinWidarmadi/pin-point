@@ -17,17 +17,20 @@
             class="text-lg sm:text-xl md:text-2xl lg:text-3xl"
           />
         </router-link>
-        <select
+        <!-- <select
           class="w-12 appearance-none lg:text-2xl md:text-xl sm:text-lg text-md lg:w-20 md:w-16 sm:w-14 bg-chevron-down focus:outline-none"
         >
           <option value="" class="">Hafiz</option>
-        </select>
+        </select> -->
+        <AccountOptions />
       </div>
     </div>
   </header>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import AccountOptions from '@/components/home/AccountOptions.vue'
+</script>
 
 <style scoped>
 .bg-chevron-down {

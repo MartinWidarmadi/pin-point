@@ -12,7 +12,7 @@
         :id="'username'"
         :label="'Username Or Email'"
         :type="'text'"
-        :placeholder="'Username'"
+        :placeholder="'Email'"
         v-model="user"
       />
       <!-- password input -->

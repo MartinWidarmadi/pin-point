@@ -25,7 +25,7 @@
           :icon="['fas', 'user']"
           class="text-lg lg:text-3xl md:text-2xl sm:text-xl"
         />
-        <p class="text-sm text-red-700 sm:text-md md:text-lg">Hafiz</p>
+        <p class="text-sm text-red-700 sm:text-md md:text-lg">{{ username }}</p>
       </div>
     </div>
 
@@ -52,10 +52,10 @@
                 :icon="['fas', 'circle-user']"
                 class="text-lg sm:text-xl md:text-3xl lg:text-5xl"
               />
-              <div class="text-2xl font-bold">{{ username }}</div>
+              <div class="text-2xl font-bold">{{ data.username }}</div>
             </div>
             <div>
-              <p class="text-sm font-bold">{{ username }} email</p>
+              <p class="text-sm font-bold">{{ data.email }}</p>
               <p class="text-xl font-bold">Group Name</p>
             </div>
           </div>

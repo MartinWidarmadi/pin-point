@@ -20,7 +20,8 @@ import {
   faChevronDown,
   faCamera,
   faXmark,
-  faCircleUser
+  faCircleUser,
+  faArrowRightFromBracket
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add(
@@ -33,7 +34,8 @@ library.add(
   faChevronDown,
   faCamera,
   faXmark,
-  faCircleUser
+  faCircleUser,
+  faArrowRightFromBracket
 )
 
 const app = createApp(App)

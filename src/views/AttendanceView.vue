@@ -30,6 +30,7 @@ import LocationSection from '@/components/attendance/LocationSection.vue'
 import TagLocationSection from '@/components/attendance/TagLocationSection.vue'
 import TagModal from '@/components/attendance/TagModal.vue'
 import { useUserStore } from '@/stores/user'
+import { useAuthStore } from '@/stores/auth'
 import { ref, type Ref, defineEmits } from 'vue'
 import { useToast, POSITION } from 'vue-toastification'
 
@@ -45,6 +46,8 @@ interface UserData {
   tag: string | null
   date: string
   time: string
+  email: string
+  username: string
 }
 
 const modalIsOpened = ref(false)
@@ -52,6 +55,7 @@ const latLngData: Ref<LatLng | null> = ref(null)
 const tagData: Ref<string | null> = ref(null)
 const photoUrl: Ref<string | null> = ref(null)
 const userStore = useUserStore()
+const { emailUser, username } = useAuthStore()
 
 const toast = useToast()
 const emits = defineEmits(['latLngData'])
@@ -107,7 +111,9 @@ const handleSubmit = () => {
       latLng: latLngData.value,
       tag: tagData.value,
       date,
-      time
+      time,
+      email: emailUser,
+      username
     }
 
     userStore.userData.push(userData)
