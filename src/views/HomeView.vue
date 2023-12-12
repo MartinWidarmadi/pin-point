@@ -1,13 +1,19 @@
 <template>
   <!-- date picker modal -->
-  <DateScrollPicker v-show="datePickerModalIsOpened" @showModal="showModal" />
+  <DateScrollPicker v-show="datePickerModalIsOpened" @showDateModal="showDateModal" />
+  <!-- user filter modal -->
+  <UserFilter
+    v-show="userFilterModalIsOpened"
+    @showUserFilterModal="showUserFilterModal"
+    @userIdData="receiveUserIdData"
+  />
   <main class="max-w-md p-5 mx-auto border-2 border-black md:max-w-lg -z-50">
     <!-- data sort -->
     <div class="flex justify-between">
       <!-- select date range -->
       <div
         @click.prevent="datePickerModalIsOpened = true"
-        class="flex flex-col items-center gap-2 justify-center p-1 md:p-2 border-2 border-black rounded-md min-w-[5rem] md:min-w-[13rem]"
+        class="flex flex-col items-center gap-2 justify-center p-1 md:p-2 border-2 border-black rounded-md min-w-[5rem] md:min-w-[13rem] cursor-pointer"
       >
         <font-awesome-icon
           :icon="['fas', 'calendar']"
@@ -19,13 +25,14 @@
       </div>
       <!-- select user -->
       <div
-        class="flex flex-col items-center justify-center gap-2 md:p-2 border-2 border-black rounded-md min-w-[5rem] sm:min-w-[10rem] md:min-w-[13rem]"
+        @click.prevent="userFilterModalIsOpened = true"
+        class="flex flex-col items-center justify-center gap-2 md:p-2 border-2 border-black rounded-md min-w-[5rem] sm:min-w-[10rem] md:min-w-[13rem] cursor-pointer"
       >
         <font-awesome-icon
           :icon="['fas', 'user']"
           class="text-lg lg:text-3xl md:text-2xl sm:text-xl"
         />
-        <p class="text-sm text-red-700 sm:text-md md:text-lg">{{ username }}</p>
+        <p class="text-sm text-red-700 sm:text-md md:text-lg">{{ userObject!.username }}</p>
       </div>
     </div>
 
@@ -41,7 +48,7 @@
         <!-- Feeds -->
         <div
           v-else
-          v-for="data in userData"
+          v-for="data in filteredUserData"
           :key="data.id"
           class="flex flex-col gap-2 p-4 border-2 border-black rounded-md"
         >
@@ -90,16 +97,41 @@
 </template>
 
 <script setup lang="ts">
+import { computed, ref } from 'vue'
+import DateScrollPicker from '../components/home/DateScrollPicker.vue'
+import UserFilter from '@/components/home/UserFilter.vue'
 import { useUserStore } from '@/stores/user'
 import { useAuthStore } from '@/stores/auth'
-import DateScrollPicker from '../components/home/DateScrollPicker.vue'
-import { ref } from 'vue'
 
 const { userData } = useUserStore()
-const { username } = useAuthStore()
+const { userObject } = useAuthStore()
 const datePickerModalIsOpened = ref(false)
+const userFilterModalIsOpened = ref(false)
+const selectedUserId = ref<number[]>([])
 
-const showModal = (value: boolean) => {
+const showDateModal = (value: boolean) => {
   datePickerModalIsOpened.value = value
 }
+
+const showUserFilterModal = (value: boolean) => {
+  userFilterModalIsOpened.value = value
+}
+
+const receiveUserIdData = (value: number[]) => {
+  selectedUserId.value = value
+}
+
+const filteredUserData = computed(() => {
+  // If the user's role is 'user', filter activities for that specific user
+  if (userObject?.roles === 'user') {
+    return userData.filter((data: any) => data.id === userObject.id)
+  } else {
+    // If there are selected user IDs, filter activities based on those IDs
+    if (selectedUserId.value.length > 0) {
+      return userData.filter((data: any) => selectedUserId.value.includes(data.id))
+    }
+    // If no selected user IDs, return all activities
+    return userData
+  }
+})
 </script>

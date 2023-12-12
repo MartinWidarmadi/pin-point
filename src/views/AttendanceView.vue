@@ -33,29 +33,16 @@ import { useUserStore } from '@/stores/user'
 import { useAuthStore } from '@/stores/auth'
 import { ref, type Ref, defineEmits } from 'vue'
 import { useToast, POSITION } from 'vue-toastification'
-
-interface LatLng {
-  lat: number
-  lng: number
-}
-
-interface UserData {
-  id: number
-  photoUrl: string | null
-  latLng: LatLng | null
-  tag: string | null
-  date: string
-  time: string
-  email: string
-  username: string
-}
+import { type UserData } from '@/stores/user'
+import { type Tag } from '@/stores/tagData'
+import '@googlemaps/js-api-loader'
 
 const modalIsOpened = ref(false)
-const latLngData: Ref<LatLng | null> = ref(null)
-const tagData: Ref<string | null> = ref(null)
-const photoUrl: Ref<string | null> = ref(null)
+const latLngData: Ref<google.maps.LatLng | null> = ref(null)
+const tagData: Ref<Tag | undefined> = ref()
+const photoUrl: Ref<string | undefined> = ref()
 const userStore = useUserStore()
-const { emailUser, username } = useAuthStore()
+const { userObject } = useAuthStore()
 
 const toast = useToast()
 const emits = defineEmits(['latLngData'])
@@ -85,12 +72,12 @@ const showModal = (value: boolean) => {
   modalIsOpened.value = value
 }
 
-const storeLatLngData = (latLng: LatLng) => {
+const storeLatLngData = (latLng: google.maps.LatLng) => {
   latLngData.value = latLng
   emits('latLngData', latLng)
 }
 
-const storeTagData = (tag: string) => {
+const storeTagData = (tag: Tag) => {
   tagData.value = tag
 }
 
@@ -107,13 +94,13 @@ const handleSubmit = () => {
     const { date, time } = getCurrentDateTime()
     const userData: UserData = {
       id: userStore.userData.length + 1,
+      username: userObject!.username,
+      email: userObject!.email,
       photoUrl: photoUrl.value,
       latLng: latLngData.value,
       tag: tagData.value,
       date,
-      time,
-      email: emailUser,
-      username
+      time
     }
 
     userStore.userData.push(userData)
@@ -121,8 +108,8 @@ const handleSubmit = () => {
 
     // Reset values
     latLngData.value = null
-    photoUrl.value = null
-    tagData.value = null
+    photoUrl.value = undefined
+    tagData.value = undefined
   } else {
     showToast('error')
   }

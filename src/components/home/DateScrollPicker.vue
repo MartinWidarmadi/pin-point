@@ -7,7 +7,11 @@
         class="flex items-center justify-between py-2 border-b-[1px] border-black max-w-[35rem] mx-auto w-full"
       >
         <p class="text-2xl font-bold">Report Period (Month & Year)</p>
-        <FontAwesomeIcon :icon="['fas', 'xmark']" class="text-2xl" @click.prevent="showModal" />
+        <FontAwesomeIcon
+          :icon="['fas', 'xmark']"
+          class="text-2xl cursor-pointer"
+          @click.prevent="showDateModal"
+        />
       </div>
       <div class="w-full max-w-sm mx-auto">
         <div class="w-full flex justify-between p-2 border-b-[1px] border-black">
@@ -34,10 +38,10 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { VueScrollPicker } from 'vue-scroll-picker'
 import 'vue-scroll-picker/lib/style.css'
 
-const emit = defineEmits(['showModal'])
+const emit = defineEmits(['showDateModal'])
 
-const showModal = () => {
-  emit('showModal', false)
+const showDateModal = () => {
+  emit('showDateModal', false)
 }
 
 const generateDateOptions = (todayDate: Date) => {
