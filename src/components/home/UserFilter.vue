@@ -6,9 +6,9 @@
       <div
         class="flex items-center justify-between py-2 border-b-[1px] border-black max-w-[35rem] mx-auto w-full"
       >
-        <p class="text-2xl font-bold">List Person</p>
+        <p class="text-2xl font-bold">Person List</p>
         <FontAwesomeIcon
-          :icon="['fas', 'xmark']"
+          :icon="['fas', 'times']"
           class="text-2xl cursor-pointer"
           @click.prevent="closeUserFilterModal"
         />
@@ -24,7 +24,7 @@
 
       <div class="p-2">
         <div>
-          <div v-if="userRoles" class="p-2 bg-blue-200">{{ currentUser }}</div>
+          <div v-if="isUserRole" class="p-2 bg-blue-200">{{ currentUsername }}</div>
           <div v-else class="flex flex-col gap-2 border-[1px] p-2 border-black">
             <div v-for="user in filteredUsers" :key="user.id">
               <input
@@ -42,7 +42,7 @@
       <!-- <div>{{ selectedUsers }} {{ selectedUserIds }}</div> -->
 
       <div class="flex flex-col gap-2 p-2">
-        <button @click.prevent="sendUserIdData" class="p-2 text-white bg-blue-600 rounded-sm">
+        <button @click.prevent="chooseUsers" class="p-2 text-white bg-blue-600 rounded-sm">
           Choose
         </button>
         <button @click.prevent="closeUserFilterModal" class="p-2 text-white bg-gray-400 rounded-sm">
@@ -60,7 +60,7 @@ import { useAuthStore } from '@/stores/auth'
 import { useUserStore } from '@/stores/user'
 
 const emit = defineEmits(['showUserFilterModal', 'userIdData'])
-const { userObject } = useAuthStore()
+const { currentUser } = useAuthStore()
 const { authData } = useUserStore()
 
 const searchQuery = ref('')
@@ -70,13 +70,13 @@ const closeUserFilterModal = () => {
   emit('showUserFilterModal', false)
 }
 
-const sendUserIdData = () => {
+const chooseUsers = () => {
   emit('userIdData', selectedUserIds.value)
   closeUserFilterModal()
 }
 
-const userRoles = computed(() => userObject!.roles === 'user')
-const currentUser = computed(() => userObject!.username)
+const isUserRole = computed(() => currentUser!.roles === 'user')
+const currentUsername = computed(() => currentUser!.username)
 
 const filteredUsers = computed(() => {
   return authData.filter((user) =>

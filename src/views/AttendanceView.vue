@@ -42,7 +42,7 @@ const latLngData: Ref<google.maps.LatLng | null> = ref(null)
 const tagData: Ref<Tag | undefined> = ref()
 const photoUrl: Ref<string | undefined> = ref()
 const userStore = useUserStore()
-const { userObject } = useAuthStore()
+const { currentUser } = useAuthStore()
 
 const toast = useToast()
 const emits = defineEmits(['latLngData'])
@@ -59,7 +59,7 @@ const showToast = (type: 'success' | 'error') => {
     hideProgressBar: true,
     closeButton: 'button',
     title: type === 'success' ? 'Success' : 'Error',
-    description: 'Some description' //
+    description: type === 'success' ? 'Data has been saved' : 'Data has not been saved' //
   }
   toast[type](options)
 }
@@ -82,25 +82,19 @@ const storeTagData = (tag: Tag) => {
 }
 
 const getCurrentDateTime = () => {
-  const currentDate = new Date()
-  return {
-    date: `${currentDate.getDate()}/${currentDate.getMonth() + 1}/${currentDate.getFullYear()}`,
-    time: `${currentDate.getHours()}:${currentDate.getMinutes()}`
-  }
+  return new Date().getTime()
 }
 
 const handleSubmit = () => {
   if (photoUrl.value && latLngData.value && tagData.value) {
-    const { date, time } = getCurrentDateTime()
     const userData: UserData = {
       id: userStore.userData.length + 1,
-      username: userObject!.username,
-      email: userObject!.email,
+      username: currentUser!.username,
+      email: currentUser!.email,
       photoUrl: photoUrl.value,
       latLng: latLngData.value,
       tag: tagData.value,
-      date,
-      time
+      dateTime: getCurrentDateTime()
     }
 
     userStore.userData.push(userData)

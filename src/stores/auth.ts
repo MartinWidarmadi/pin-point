@@ -11,23 +11,23 @@ interface User {
 }
 
 export const useAuthStore = defineStore('auth', () => {
-  const userObject = ref<User>()
+  const currentUser = ref<User>()
   const isLogin = ref(false)
   const userStore = useUserStore()
 
   const login = (email: string, password: string): void => {
     userStore.authData.forEach((user: any) => {
       if (user.email === email && user.password === password) {
-        userObject.value = user
+        currentUser.value = user
         isLogin.value = true
       }
     })
   }
 
   const logout = (): void => {
-    userObject.value = undefined
+    currentUser.value = undefined
     isLogin.value = false
   }
 
-  return { userObject, isLogin, login, logout }
+  return { currentUser, isLogin, login, logout }
 })

@@ -1,18 +1,18 @@
 <template>
-  <!-- date picker modal -->
-  <DateScrollPicker v-show="datePickerModalIsOpened" @showDateModal="showDateModal" />
-  <!-- user filter modal -->
+  <!-- Date picker modal -->
+  <DateScrollPicker v-show="isDatePickerModalVisible" @showDateModal="toggleDatePickerModal" />
+  <!-- User filter modal -->
   <UserFilter
-    v-show="userFilterModalIsOpened"
-    @showUserFilterModal="showUserFilterModal"
-    @userIdData="receiveUserIdData"
+    v-show="isUserFilterModalVisible"
+    @showUserFilterModal="toggleUserFilterModal"
+    @userIdData="handleUserIdData"
   />
   <main class="max-w-md p-5 mx-auto border-2 border-black md:max-w-lg -z-50">
-    <!-- data sort -->
+    <!-- Data sort -->
     <div class="flex justify-between">
-      <!-- select date range -->
+      <!-- Select date range -->
       <div
-        @click.prevent="datePickerModalIsOpened = true"
+        @click.prevent="toggleDatePickerModal(true)"
         class="flex flex-col items-center gap-2 justify-center p-1 md:p-2 border-2 border-black rounded-md min-w-[5rem] md:min-w-[13rem] cursor-pointer"
       >
         <font-awesome-icon
@@ -20,27 +20,31 @@
           class="text-lg lg:text-3xl md:text-2xl sm:text-xl"
         />
         <p class="text-sm text-red-700 justify-self-center sm:text-md md:text-lg">
-          11/04/2023 - 11/04/2023
+          {{
+            `${milisecondEpochToDateString(currentDate.startDate)} - ${milisecondEpochToDateString(
+              currentDate.endDate
+            )}`
+          }}
         </p>
       </div>
-      <!-- select user -->
+      <!-- Select user -->
       <div
-        @click.prevent="userFilterModalIsOpened = true"
+        @click.prevent="toggleUserFilterModal(true)"
         class="flex flex-col items-center justify-center gap-2 md:p-2 border-2 border-black rounded-md min-w-[5rem] sm:min-w-[10rem] md:min-w-[13rem] cursor-pointer"
       >
         <font-awesome-icon
           :icon="['fas', 'user']"
           class="text-lg lg:text-3xl md:text-2xl sm:text-xl"
         />
-        <p class="text-sm text-red-700 sm:text-md md:text-lg">{{ userObject!.username }}</p>
+        <p class="text-sm text-red-700 sm:text-md md:text-lg">{{ currentUser?.username }}</p>
       </div>
     </div>
 
-    <!-- activity -->
+    <!-- Activity -->
     <div class="pt-5">
       <div class="min-w-[13rem] min-h-[29rem] flex flex-col gap-2 justify-center items-center">
         <div
-          v-if="userData.length === 0"
+          v-if="filteredActivitiesByUser.length === 0"
           class="flex items-center justify-center w-full h-screen p-2 text-3xl font-bold border-2 border-black rounded-md"
         >
           <p>No Activity</p>
@@ -48,8 +52,8 @@
         <!-- Feeds -->
         <div
           v-else
-          v-for="data in filteredUserData"
-          :key="data.id"
+          v-for="activity in displayedActivities"
+          :key="activity.id"
           class="flex flex-col gap-2 p-4 border-2 border-black rounded-md"
         >
           <!-- Feeds header -->
@@ -59,79 +63,103 @@
                 :icon="['fas', 'circle-user']"
                 class="text-lg sm:text-xl md:text-3xl lg:text-5xl"
               />
-              <div class="text-2xl font-bold">{{ data.username }}</div>
+              <div class="text-2xl font-bold">{{ activity.username }}</div>
             </div>
             <div>
-              <p class="text-sm font-bold">{{ data.email }}</p>
+              <p class="text-sm font-bold">{{ activity.email }}</p>
               <p class="text-xl font-bold">Group Name</p>
             </div>
           </div>
           <!-- Feeds Photo -->
           <div>
             <h3 class="text-2xl font-bold">Photo</h3>
-            <img :src="data.photoUrl" />
+            <img :src="activity.photoUrl" />
           </div>
           <!-- Feeds Location -->
           <div>
             <h3 class="text-2xl font-bold">Location</h3>
-            <p>Latitude {{ data.latLng.lat() }}</p>
-            <p>Longitude {{ data.latLng.lng() }}</p>
+            <p>Latitude {{ activity.latLng.lat() }}</p>
+            <p>Longitude {{ activity.latLng.lng() }}</p>
           </div>
           <!-- Feeds Tag & Time-->
           <div class="flex justify-between">
             <!-- Tag -->
             <div>
               <h3 class="text-2xl font-bold">Tag Location</h3>
-              <p>{{ data.tag.name }}</p>
+              <p>{{ activity.tag.name }}</p>
             </div>
             <!-- Time -->
             <div class="text-right">
-              <h4 class="text-xl font-bold">{{ data.date }}</h4>
-              <p>{{ data.time }}</p>
+              <h4 class="text-xl font-bold">
+                {{ milisecondEpochToDateString(activity.dateTime) }}
+              </h4>
+              <p>{{ milisecondEpochToTimeString(activity.dateTime) }}</p>
             </div>
           </div>
         </div>
       </div>
     </div>
+    <!-- <p class="absolute text-transparent">{{ displayedActivities }}</p> -->
   </main>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import DateScrollPicker from '../components/home/DateScrollPicker.vue'
 import UserFilter from '@/components/home/UserFilter.vue'
-import { useUserStore } from '@/stores/user'
+import { type UserData, useUserStore } from '@/stores/user'
 import { useAuthStore } from '@/stores/auth'
+import { useDateStore } from '@/stores/date'
+import { type DateRange } from '@/stores/date'
 
 const { userData } = useUserStore()
-const { userObject } = useAuthStore()
-const datePickerModalIsOpened = ref(false)
-const userFilterModalIsOpened = ref(false)
+const { currentUser } = useAuthStore()
+const { currentDate, milisecondEpochToDateString, milisecondEpochToTimeString } = useDateStore()
+const isDatePickerModalVisible = ref(false)
+const isUserFilterModalVisible = ref(false)
 const selectedUserId = ref<number[]>([])
+const filteredActivitiesByUser = ref<UserData[]>([])
 
-const showDateModal = (value: boolean) => {
-  datePickerModalIsOpened.value = value
+const toggleDatePickerModal = (value: boolean) => {
+  isDatePickerModalVisible.value = value
 }
 
-const showUserFilterModal = (value: boolean) => {
-  userFilterModalIsOpened.value = value
+const toggleUserFilterModal = (value: boolean) => {
+  isUserFilterModalVisible.value = value
 }
 
-const receiveUserIdData = (value: number[]) => {
+const handleUserIdData = (value: number[]) => {
   selectedUserId.value = value
 }
 
-const filteredUserData = computed(() => {
-  // If the user's role is 'user', filter activities for that specific user
-  if (userObject?.roles === 'user') {
-    return userData.filter((data: any) => data.id === userObject.id)
+const filterByDate = (dateRange: DateRange, activities: UserData[]) => {
+  return activities.filter(
+    (activity) => activity.dateTime >= dateRange.startDate && activity.dateTime <= dateRange.endDate
+  )
+}
+
+const filterUserActivities = () => {
+  if (currentUser?.roles === 'user') {
+    filteredActivitiesByUser.value = filterByDate(
+      currentDate,
+      userData.filter((activity) => activity.id === currentUser.id)
+    )
   } else {
-    // If there are selected user IDs, filter activities based on those IDs
-    if (selectedUserId.value.length > 0) {
-      return userData.filter((data: any) => selectedUserId.value.includes(data.id))
-    }
-    // If no selected user IDs, return all activities
-    return userData
+    filteredActivitiesByUser.value =
+      selectedUserId.value.length > 0
+        ? filterByDate(
+            currentDate,
+            userData.filter((activity) => selectedUserId.value.includes(activity.id))
+          )
+        : filterByDate(currentDate, userData)
   }
+}
+
+onMounted(() => {
+  filterUserActivities() // Initial filter
+})
+
+const displayedActivities = computed(() => {
+  return filteredActivitiesByUser.value
 })
 </script>

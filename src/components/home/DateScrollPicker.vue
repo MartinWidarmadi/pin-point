@@ -10,7 +10,7 @@
         <FontAwesomeIcon
           :icon="['fas', 'xmark']"
           class="text-2xl cursor-pointer"
-          @click.prevent="showDateModal"
+          @click.prevent="closeDateModal"
         />
       </div>
       <div class="w-full max-w-sm mx-auto">
@@ -19,56 +19,77 @@
           <h3>Date To</h3>
         </div>
         <div class="flex items-center justify-between">
-          <VueScrollPicker :options="dateOptions" v-model="selectedDate" />
+          <VueScrollPicker :options="startDateOptions" v-model="startDate" />
           <p>-</p>
-          <VueScrollPicker :options="nameData" v-model="selectedName" />
+          <VueScrollPicker :options="endDateOptions" v-model="endDate" />
         </div>
       </div>
-      <div>
-        <button class="p-2 text-white bg-blue-600">Choose</button>
-        <button class="p-2 text-white bg-gray-400">Cancel</button>
+      <div class="flex flex-col gap-2 p-2">
+        <button @click="confirmDate" class="p-2 text-white bg-blue-600">Choose</button>
+        <button @click="cancelDate" class="p-2 text-white bg-gray-400">Cancel</button>\
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted, defineEmits } from 'vue'
+import { ref, defineEmits, watch } from 'vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { VueScrollPicker } from 'vue-scroll-picker'
 import 'vue-scroll-picker/lib/style.css'
+import { useDateStore } from '@/stores/date'
 
-const emit = defineEmits(['showDateModal'])
+const { formatDateToString, getStartOfDayFromMilisecondEpoch, getEndOfDayFromMilisecondEpoch } =
+  useDateStore()
 
-const showDateModal = () => {
-  emit('showDateModal', false)
-}
+const emit = defineEmits(['showDateModal', 'dateIsFiltered'])
+const todayDate = new Date()
+const { currentDate } = useDateStore()
 
-const generateDateOptions = (todayDate: Date) => {
-  const dateOptions = []
-  for (let i = -3; i < 4; i++) {
-    const date = new Date(todayDate)
-    date.setDate(todayDate.getDate() + i)
-    dateOptions.push(date.toISOString().slice(0, 10))
+const generateDateOptions = (startDate: number, startOffset: number, endOffset: number) => {
+  const dateOptions: DateOptions[] = []
+  for (let i = startOffset; i < endOffset; i++) {
+    const date = new Date(startDate)
+    date.setDate(date.getDate() + i)
+    dateOptions.push({ name: formatDateToString(date), value: date.getTime() })
   }
   return dateOptions
 }
 
-const todayDate = new Date()
-const dateOptions = ref(generateDateOptions(todayDate))
-const selectedDate = ref('')
-const nameData = ['alvon', 'martin', 'james', 'hafiz']
-const selectedName = ref(nameData[0])
+const startDate = ref(getStartOfDayFromMilisecondEpoch(todayDate.getTime()))
+const endDate = ref(getEndOfDayFromMilisecondEpoch(todayDate.getTime()))
+const startDateOptions = ref(generateDateOptions(todayDate.getTime(), -10, 11))
+const endDateOptions = ref(generateDateOptions(todayDate.getTime(), 0, 10))
 
-onMounted(() => {
-  selectedDate.value = dateOptions.value[3]
-  console.log('done')
+watch(startDate, (newStartDate) => {
+  startDateOptions.value = generateDateOptions(newStartDate, -10, 11)
+  endDateOptions.value = generateDateOptions(newStartDate, 0, 10)
+  endDate.value = newStartDate
 })
 
-watch(selectedDate, (newVal) => {
-  selectedDate.value = newVal
-  const newDate = new Date(newVal)
-  generateDateOptions(newDate)
-  console.log(newVal)
+watch(endDate, (newEndDate) => {
+  const length = endDateOptions.value.length
+  if (newEndDate === endDateOptions.value[length - 1].value) {
+    endDateOptions.value = generateDateOptions(startDate.value, 0, length + 10)
+  }
 })
+
+const closeDateModal = () => {
+  emit('showDateModal', false)
+}
+
+const confirmDate = () => {
+  currentDate.startDate = getStartOfDayFromMilisecondEpoch(startDate.value)
+  currentDate.endDate = getEndOfDayFromMilisecondEpoch(endDate.value)
+  closeDateModal()
+}
+
+const cancelDate = () => {
+  closeDateModal()
+}
+
+interface DateOptions {
+  name: string
+  value: number
+}
 </script>

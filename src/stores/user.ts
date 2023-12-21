@@ -8,8 +8,7 @@ export interface UserData {
   photoUrl?: string | undefined
   latLng: google.maps.LatLng
   tag: Tag
-  date: string
-  time: string
+  dateTime: number
 }
 
 export const useUserStore = defineStore('user', () => {
