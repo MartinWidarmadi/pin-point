@@ -11,25 +11,36 @@ export interface UserData {
   dateTime: number
 }
 
+export interface UserList {
+  id: number
+  email: string
+  username: string
+  password: string
+  roles: string
+  group: string
+}
+
 export const useUserStore = defineStore('user', () => {
-  const authData = [
+  const userList: UserList[] = [
     {
       id: 1,
       email: 'admin@email.com',
       username: 'Admin',
       password: 'admin',
-      roles: 'admin'
+      roles: 'Admin',
+      group: 'Cabang-Bandung'
     },
     {
       id: 2,
       email: 'hafiz@email.com',
       username: 'Hafiz',
       password: 'user',
-      roles: 'user'
+      roles: 'User',
+      group: 'Cabang-Bandung'
     }
   ]
 
   const userData: UserData[] = []
 
-  return { authData, userData }
+  return { userList, userData }
 })

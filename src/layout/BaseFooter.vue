@@ -19,7 +19,7 @@
         />
         <p class="text-xs">Attendance</p>
       </router-link>
-      <router-link to="/" class="text-center">
+      <router-link to="/account" class="text-center">
         <font-awesome-icon
           :icon="['fas', 'user']"
           class="text-lg sm:text-xl md:text-2xl lg:text-3xl"

@@ -61,7 +61,7 @@ import { useUserStore } from '@/stores/user'
 
 const emit = defineEmits(['showUserFilterModal', 'userIdData'])
 const { currentUser } = useAuthStore()
-const { authData } = useUserStore()
+const { userList } = useUserStore()
 
 const searchQuery = ref('')
 const selectedUserIds = ref<number[]>([])
@@ -79,7 +79,7 @@ const isUserRole = computed(() => currentUser!.roles === 'user')
 const currentUsername = computed(() => currentUser!.username)
 
 const filteredUsers = computed(() => {
-  return authData.filter((user) =>
+  return userList.filter((user) =>
     user.username.toLowerCase().includes(searchQuery.value.toLowerCase())
   )
 })
