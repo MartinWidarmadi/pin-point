@@ -17,8 +17,7 @@ const loader = new Loader({
   version: 'weekly'
 })
 
-const { useGeolocation } = useMapStore()
-const { coords } = useGeolocation()
+const { getLatLngLocation, coords } = useMapStore()
 
 const mapDiv = ref<HTMLDivElement | null>(null)
 const map = ref<google.maps.Map | null>(null)
@@ -26,19 +25,19 @@ const markers: google.maps.Marker[] = []
 const geocoder = ref<google.maps.Geocoder | null>(null)
 const clickedAddress = ref<string | null>(null)
 const latLngData = ref<google.maps.LatLng | null>(null)
-const emits = defineEmits(['latLngData'])
+const emits = defineEmits(['latLngData', 'address'])
 
 // Initialize the map
 const initializeMap = async () => {
   map.value = await loader.importLibrary('maps').then(
     (maps) =>
       new maps.Map(mapDiv.value!, {
-        center: { lat: coords.value.latitude, lng: coords.value.longitude },
+        center: { lat: coords.latitude, lng: coords.longitude },
         zoom: 15
       })
   )
   geocoder.value = new (await loader.importLibrary('geocoding')).Geocoder()
-  reverseGeocode(coords.value.latitude, coords.value.longitude)
+  reverseGeocode(coords.latitude, coords.longitude)
 }
 
 // Add a marker
@@ -51,6 +50,9 @@ const placeMarker = async (lat: number, lng: number) => {
     position: { lat, lng }
   })
 
+  const latLng = new google.maps.LatLng(lat, lng)
+  emits('latLngData', latLng)
+
   markers.push(newMarker)
 }
 
@@ -61,6 +63,7 @@ const setupClickEventListener = () => {
     placeMarker(latLng.lat(), latLng.lng())
     reverseGeocode(latLng.lat(), latLng.lng())
     emits('latLngData', latLng)
+    emits('address', clickedAddress.value)
   })
 }
 
@@ -72,6 +75,8 @@ const reverseGeocode = (lat: number, lng: number) => {
     geocoder.value.geocode({ location: latLng }, (results, status) => {
       if (status === 'OK' && results && results.length > 0) {
         latLngData.value = latLng
+        clickedAddress.value = results[0].formatted_address
+        emits('address', clickedAddress.value)
       } else {
         clickedAddress.value = 'Lokasi tidak ditemukan'
       }
@@ -81,8 +86,9 @@ const reverseGeocode = (lat: number, lng: number) => {
 
 // Onmounted page
 onMounted(async () => {
+  await getLatLngLocation()
   await initializeMap()
-  placeMarker(coords.value.latitude, coords.value.longitude)
+  placeMarker(coords.latitude, coords.longitude)
   setupClickEventListener()
 })
 

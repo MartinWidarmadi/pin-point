@@ -25,7 +25,8 @@ import {
   faUserPlus,
   faPenToSquare,
   faUserMinus,
-  faTrash
+  faTrash,
+  faCircleExclamation
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add(
@@ -43,7 +44,8 @@ library.add(
   faUserPlus,
   faPenToSquare,
   faUserMinus,
-  faTrash
+  faTrash,
+  faCircleExclamation
 )
 
 const app = createApp(App)

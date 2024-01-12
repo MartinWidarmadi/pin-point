@@ -11,17 +11,13 @@
             class="text-lg sm:text-xl md:text-2xl lg:text-3xl"
           />
         </router-link>
-        <router-link to="/">
+        <router-link v-show="$router.currentRoute.value.path === '/'" to="report">
           <font-awesome-icon
             :icon="['fas', 'file-lines']"
             class="text-lg sm:text-xl md:text-2xl lg:text-3xl"
           />
         </router-link>
-        <!-- <select
-          class="w-12 appearance-none lg:text-2xl md:text-xl sm:text-lg text-md lg:w-20 md:w-16 sm:w-14 bg-chevron-down focus:outline-none"
-        >
-          <option value="" class="">Hafiz</option>
-        </select> -->
+
         <AccountOptions />
       </div>
     </div>

@@ -34,7 +34,12 @@
             :key="group.id"
             class="flex justify-between p-4 shadow-md shadow-gray-400"
           >
-            <h3 class="text-2xl font-bold">{{ group.name }}</h3>
+            <h3
+              class="text-2xl font-bold cursor-pointer"
+              @click.prevent="setCurrentGroup(group.name)"
+            >
+              {{ group.name }}
+            </h3>
             <div class="flex gap-4 text-3xl">
               <FontAwesomeIcon
                 :icon="['fas', 'pen-to-square']"
@@ -59,6 +64,7 @@
 import { defineEmits, ref } from 'vue'
 import { useGroupStore } from '@/stores/group'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { storeToRefs } from 'pinia'
 
 const emit = defineEmits([
   'closeModal',
@@ -69,6 +75,7 @@ const emit = defineEmits([
 ])
 
 const { groupList } = useGroupStore()
+const { selectedGroup } = storeToRefs(useGroupStore())
 
 const searchQuery = ref('')
 
@@ -94,6 +101,11 @@ const openEditGroupModal = (id: number) => {
   setGroupId(id)
   closeModal()
   emit('openEditGroupModal', true)
+}
+
+const setCurrentGroup = (name: string) => {
+  selectedGroup.value = name
+  closeModal()
 }
 
 const filteredGroupList = () => {

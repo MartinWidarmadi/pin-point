@@ -1,7 +1,7 @@
 <template>
   <section id="account">
     <!-- invite user modal -->
-    <AddUserModal v-show="inviteUserModalIsOpened" @toggleModal="closeInviteUserModal" />
+    <AddUserModal v-show="inviteUserModalIsOpened" @closeModal="closeInviteUserModal" />
     <!-- Choose group modal -->
     <GroupModal
       v-show="groupModalIsOpened"
@@ -22,12 +22,28 @@
       @closeModal="closeDeleteGroupModal"
       :groupId="groupId"
     />
-
+    <!-- Edit group modal -->
     <EditGroupModal
       v-show="editGroupModalIsOpened"
       @closeModal="closeEditGroupModal"
       :groupId="groupId"
     />
+
+    <!-- Edit User Modal -->
+    <EditUserModal
+      v-show="editUserModalIsOpened"
+      @closeModal="closeEditUserModal"
+      :selectedUser="selectedUser"
+      :editUserModalIsOpened="editUserModalIsOpened"
+    />
+
+    <!-- Remove User Modal -->
+    <RemoveUserModal
+      v-show="removeUserModalIsOpened"
+      @closeModal="closeRemoveUserModal"
+      :userId="userId"
+    />
+
     <div
       class="flex flex-col items-start h-[80vh] max-w-lg gap-4 p-5 mx-auto border-2 border-black md:gap-2 -z-50"
     >
@@ -36,9 +52,13 @@
         <!-- choose group -->
         <div
           class="flex items-center justify-between gap-2 cursor-pointer"
-          @click.prevent="groupModalIsOpened = true"
+          @click.prevent="
+            currentUser?.roles == 'Admin'
+              ? (groupModalIsOpened = true)
+              : (groupModalIsOpened = false)
+          "
         >
-          <div class="font-semibold text-blue-700">{{ currentSelectedGroup }}</div>
+          <div class="font-semibold text-blue-700">{{ selectedGroup }}</div>
           <font-awesome-icon :icon="['fas', 'chevron-down']"></font-awesome-icon>
         </div>
 
@@ -93,14 +113,16 @@
           <div class="flex items-center gap-2" v-show="currentUser?.roles == 'Admin'">
             <!-- edit button -->
             <div
-              class="flex flex-col items-center justify-center p-2 bg-blue-200 min-w-[4rem] shadow-sm shadow-black"
+              class="flex flex-col items-center justify-center p-2 bg-blue-200 min-w-[4rem] shadow-sm shadow-black cursor-pointer"
+              @click.prevent="openEditUserModal(user)"
             >
               <FontAwesomeIcon :icon="['fas', 'pen-to-square']" />
               <p>Edit</p>
             </div>
             <!-- remove button -->
             <div
-              class="flex flex-col items-center justify-center p-2 bg-blue-200 min-w-[4rem] shadow-sm shadow-black"
+              class="flex flex-col items-center justify-center p-2 bg-blue-200 min-w-[4rem] shadow-sm shadow-black cursor-pointer"
+              @click.prevent="openRemoveUserModal(user.id)"
             >
               <FontAwesomeIcon :icon="['fas', 'user-minus']" />
               <p>Remove</p>
@@ -113,27 +135,33 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch, type Ref } from 'vue'
 import AddUserModal from '@/components/account/AddUserModal.vue'
 import GroupModal from '@/components/account/GroupModal.vue'
 import CreateNewGroupModal from '@/components/account/CreateNewGroupModal.vue'
 import DeleteGroupModal from '@/components/account/DeleteGroupModal.vue'
 import EditGroupModal from '@/components/account/EditGroupModal.vue'
-import { useUserStore } from '@/stores/user'
+import EditUserModal from '@/components/account/EditUserModal.vue'
+import RemoveUserModal from '@/components/account/RemoveUserModal.vue'
+import { useUserStore, type UserList } from '@/stores/user'
 import { useAuthStore } from '@/stores/auth'
 import { useGroupStore } from '@/stores/group'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { storeToRefs } from 'pinia'
 
-const { userList } = useUserStore()
+const { userList } = storeToRefs(useUserStore())
 const { currentUser } = useAuthStore()
-const { selectedGroup } = useGroupStore()
-const currentSelectedGroup = ref(selectedGroup)
+const { selectedGroup } = storeToRefs(useGroupStore())
 const inviteUserModalIsOpened = ref(false)
 const groupModalIsOpened = ref(false)
 const createNewGroupModalIsOpened = ref(false)
 const deleteGroupModalIsOpened = ref(false)
 const editGroupModalIsOpened = ref(false)
-const groupId = ref(0)
+const editUserModalIsOpened = ref(false)
+const removeUserModalIsOpened = ref(false)
+const groupId = ref(-1)
+const userId = ref(-1)
+const selectedUser: Ref<UserList | undefined> = ref(undefined)
 const searchQuery = ref('')
 
 const closeInviteUserModal = (value: boolean) => {
@@ -173,9 +201,39 @@ const closeEditGroupModal = (value: boolean) => {
   editGroupModalIsOpened.value = value
 }
 
+const closeEditUserModal = (value: boolean) => {
+  editUserModalIsOpened.value = value
+}
+
+const openEditUserModal = (user: UserList) => {
+  selectedUser.value = user
+  if (selectedUser.value) {
+    editUserModalIsOpened.value = true
+  }
+}
+
+const openRemoveUserModal = (id: number) => {
+  removeUserModalIsOpened.value = true
+  userId.value = id
+}
+
+const closeRemoveUserModal = (value: boolean) => {
+  removeUserModalIsOpened.value = value
+}
+
 const filteredUser = computed(() => {
-  return userList.filter((user) =>
-    user.username.toLowerCase().includes(searchQuery.value.toLowerCase())
+  return userList.value.filter(
+    (user) =>
+      user?.group == selectedGroup.value &&
+      user.username.toLowerCase().includes(searchQuery.value.toLowerCase())
   )
 })
+
+watch(
+  () => userList.value,
+  () => {
+    // Update filteredUser when either selectedGroup or userList changes
+    filteredUser.value
+  }
+)
 </script>

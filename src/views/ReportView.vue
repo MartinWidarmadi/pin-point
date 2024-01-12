@@ -40,66 +40,49 @@
       </div>
     </div>
 
-    <!-- Activity -->
+    <!-- Report -->
     <div class="pt-5">
-      <div class="min-w-[13rem] min-h-[29rem] flex flex-col gap-2 justify-center items-center">
-        <div
-          v-if="filteredActivitiesByUser.length === 0"
-          class="flex items-center justify-center w-full h-screen p-2 text-3xl font-bold border-2 border-black rounded-md"
-        >
-          <p>No Activity</p>
-        </div>
-        <!-- Feeds -->
-        <div
-          v-else
-          v-for="activity in filteredActivitiesByUser"
-          :key="activity.id"
-          class="flex flex-col gap-2 p-4 border-2 border-black rounded-md"
-        >
-          <!-- Feeds header -->
-          <div class="flex justify-between">
-            <div class="flex items-center justify-center gap-2">
-              <font-awesome-icon
-                :icon="['fas', 'circle-user']"
-                class="text-lg sm:text-xl md:text-3xl lg:text-5xl"
-              />
-              <div class="text-2xl font-bold">{{ activity.username }}</div>
-            </div>
-            <div>
-              <p class="text-sm font-bold">{{ activity.email }}</p>
-              <p class="text-xl font-bold">{{ activity.group }}</p>
-            </div>
-          </div>
-          <!-- Feeds Photo -->
-          <div>
-            <h3 class="text-2xl font-bold">Photo</h3>
-            <img :src="activity.photoUrl" />
-          </div>
-          <!-- Feeds Location -->
-          <div>
-            <h3 class="text-2xl font-bold">Location</h3>
-            <p>Latitude {{ activity.latLng.lat() }}</p>
-            <p>Longitude {{ activity.latLng.lng() }}</p>
-          </div>
-          <!-- Feeds Tag & Time-->
-          <div class="flex justify-between">
-            <!-- Tag -->
-            <div>
-              <h3 class="text-2xl font-bold">Tag Location</h3>
-              <p>{{ activity.tag.name }}</p>
-            </div>
-            <!-- Time -->
-            <div class="text-right">
-              <h4 class="text-xl font-bold">
+      <div class="min-w-[13rem] min-h-[29rem] flex flex-col gap-2">
+        <table class="table-auto">
+          <thead>
+            <tr>
+              <td class="min-w-[7rem] bg-blue-200 rounded-sm border-blue-400 border-2 text-center">
+                #
+              </td>
+              <td class="min-w-[5rem] bg-blue-200 rounded-sm border-blue-400 border-2 text-center">
+                Date
+              </td>
+              <td class="min-w-[5rem] bg-blue-200 rounded-sm border-blue-400 border-2 text-center">
+                Time
+              </td>
+              <td class="min-w-[5rem] bg-blue-200 rounded-sm border-blue-400 border-2 text-center">
+                User
+              </td>
+              <td class="min-w-[5rem] bg-blue-200 rounded-sm border-blue-400 border-2 text-center">
+                Location
+              </td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="activity in filteredActivitiesByUser" :key="activity.id">
+              <td class="text-xs text-center border-2 border-blue-400">
+                {{ filteredActivitiesByUser.indexOf(activity) + 1 }}
+              </td>
+              <td class="text-xs text-center border-2 border-blue-400">
                 {{ milisecondEpochToDateString(activity.dateTime) }}
-              </h4>
-              <p>{{ milisecondEpochToTimeString(activity.dateTime) }}</p>
-            </div>
-          </div>
-        </div>
+              </td>
+              <td class="text-xs text-center border-2 border-blue-400">
+                {{ milisecondEpochToTimeString(activity.dateTime) }}
+              </td>
+              <td class="text-xs text-center border-2 border-blue-400">{{ activity.username }}</td>
+              <td class="p-1 text-xs text-center text-blue-800 border-2 border-blue-400">
+                {{ activity.address.split(',')[0] }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
-    <!-- <p class="absolute text-transparent">{{ displayedActivities }}</p> -->
   </main>
 </template>
 
@@ -109,8 +92,7 @@ import DateScrollPicker from '../components/home/DateScrollPicker.vue'
 import UserFilter from '@/components/home/UserFilter.vue'
 import { type UserData, useUserStore } from '@/stores/user'
 import { useAuthStore } from '@/stores/auth'
-import { useDateStore } from '@/stores/date'
-import { type DateRange } from '@/stores/date'
+import { useDateStore, type DateRange } from '@/stores/date'
 
 const { userData } = useUserStore()
 const { currentUser } = useAuthStore()
@@ -139,17 +121,17 @@ const filterByDate = (dateRange: DateRange, activities: UserData[]) => {
 }
 
 const filterUserActivities = () => {
-  if (currentUser?.roles === 'User') {
+  if (currentUser?.roles === 'user') {
     filteredActivitiesByUser.value = filterByDate(
       currentDate,
-      userData.filter((activity) => activity.userId === currentUser.id)
+      userData.filter((activity) => activity.id === currentUser.id)
     )
   } else {
     filteredActivitiesByUser.value =
       selectedUserId.value.length > 0
         ? filterByDate(
             currentDate,
-            userData.filter((activity) => selectedUserId.value.includes(activity.userId))
+            userData.filter((activity) => selectedUserId.value.includes(activity.id))
           )
         : filterByDate(currentDate, userData)
   }
@@ -162,6 +144,4 @@ onMounted(() => {
 watch([() => currentDate.startDate, () => currentDate.endDate, () => selectedUserId.value], () => {
   filterUserActivities()
 })
-
-// watch
 </script>

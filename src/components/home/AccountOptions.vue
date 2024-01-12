@@ -2,7 +2,7 @@
   <Menu as="div" class="relative inline-block text-left">
     <div>
       <MenuButton class="flex items-center justify-between gap-1">
-        <p class="text-xl">{{ username }}</p>
+        <p class="text-xl">{{ currentUser?.username }}</p>
         <FontAwesomeIcon :icon="['fas', 'chevron-down']" class="text-lg" />
       </MenuButton>
     </div>
@@ -37,5 +37,5 @@ const logout = () => {
   router.push('/login')
 }
 
-const { username } = useAuthStore()
+const { currentUser } = useAuthStore()
 </script>

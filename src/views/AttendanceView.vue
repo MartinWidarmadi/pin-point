@@ -8,7 +8,7 @@
       <PhotoSection @storePhotoUrl="storePhotoUrl" />
 
       <!-- location pin map -->
-      <LocationSection @latLngData="storeLatLngData" />
+      <LocationSection @latLngData="storeLatLngData" @address="storeAddress" />
 
       <!-- tag location -->
       <TagLocationSection @showModal="showModal" @storeTagData="storeTagData" />
@@ -36,11 +36,13 @@ import { useToast, POSITION } from 'vue-toastification'
 import { type UserData } from '@/stores/user'
 import { type Tag } from '@/stores/tagData'
 import '@googlemaps/js-api-loader'
+import router from '@/router'
 
 const modalIsOpened = ref(false)
 const latLngData: Ref<google.maps.LatLng | null> = ref(null)
 const tagData: Ref<Tag | undefined> = ref()
 const photoUrl: Ref<string | undefined> = ref()
+const addressData: Ref<string | undefined> = ref()
 const userStore = useUserStore()
 const { currentUser } = useAuthStore()
 
@@ -81,6 +83,10 @@ const storeTagData = (tag: Tag) => {
   tagData.value = tag
 }
 
+const storeAddress = (address: string) => {
+  addressData.value = address
+}
+
 const getCurrentDateTime = () => {
   return new Date().getTime()
 }
@@ -89,16 +95,21 @@ const handleSubmit = () => {
   if (photoUrl.value && latLngData.value && tagData.value) {
     const userData: UserData = {
       id: userStore.userData.length + 1,
+      userId: currentUser!.id,
       username: currentUser!.username,
       email: currentUser!.email,
+      group: currentUser!.group,
       photoUrl: photoUrl.value,
       latLng: latLngData.value,
       tag: tagData.value,
-      dateTime: getCurrentDateTime()
+      dateTime: getCurrentDateTime(),
+      address: addressData.value!
     }
 
     userStore.userData.push(userData)
     showToast('success')
+
+    router.push({ name: 'home' })
 
     // Reset values
     latLngData.value = null

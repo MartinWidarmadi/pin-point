@@ -75,7 +75,7 @@ const chooseUsers = () => {
   closeUserFilterModal()
 }
 
-const isUserRole = computed(() => currentUser!.roles === 'user')
+const isUserRole = computed(() => currentUser!.roles === 'User')
 const currentUsername = computed(() => currentUser!.username)
 
 const filteredUsers = computed(() => {

@@ -1,8 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import LoginView from '../views/LoginView.vue'
-import HomeView from '../views/HomeView.vue'
-import AttendanceView from '@/views/AttendanceView.vue'
-import AccountView from '@/views/AccountView.vue'
 import { useAuthStore } from '@/stores/auth'
 
 const router = createRouter({
@@ -15,35 +11,46 @@ const router = createRouter({
         {
           path: '/',
           name: 'home',
-          component: HomeView
+          component: () => import('@/views/HomeView.vue')
+        },
+        {
+          path: 'report',
+          name: 'report',
+          component: () => import('@/views/ReportView.vue')
         },
         {
           path: '/attendance',
           name: 'attendance',
-          component: AttendanceView
+          component: () => import('@/views/AttendanceView.vue')
         },
         {
           path: '/account',
           name: 'account',
-          component: AccountView
+          component: () => import('@/views/AccountView.vue')
         }
       ]
     },
     {
       path: '/login',
       name: 'login',
-      component: LoginView
+      component: () => import('@/views/LoginView.vue')
     }
   ]
 })
 
-router.beforeEach(async (to) => {
+router.beforeEach((to, from, next) => {
   const publicPages = ['/login']
   const authRequired = !publicPages.includes(to.path)
   const authStore = useAuthStore()
 
+  // If the route requires authentication and the user is not logged in,
+  // redirect to the login page
   if (authRequired && !authStore.isLogin) {
-    return '/login'
+    next('/login')
+  } else {
+    // If the user is already logged in, or the route doesn't require authentication,
+    // allow navigation
+    next()
   }
 })
 

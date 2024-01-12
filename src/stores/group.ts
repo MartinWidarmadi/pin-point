@@ -6,7 +6,7 @@ export interface Group {
 }
 
 export const useGroupStore = defineStore('group', () => {
-  const selectedGroup = ref()
+  const selectedGroup: Ref<String | undefined> = ref('')
 
   const groupList: Ref<Group[]> = ref([
     {
