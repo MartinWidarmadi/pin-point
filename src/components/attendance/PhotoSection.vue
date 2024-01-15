@@ -76,7 +76,7 @@ const startCamera = async () => {
   cameraIsOn.value = true
   try {
     const stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: selectedCamera.value.type }
+      video: { facingMode: { exact: selectedCamera.value.type } }
     })
     if (videoElement.value) {
       videoElement.value.srcObject = stream
