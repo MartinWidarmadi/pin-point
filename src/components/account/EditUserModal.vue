@@ -2,42 +2,54 @@
   <div
     class="fixed top-0 z-50 flex items-center justify-center w-screen h-screen bg-black bg-opacity-80 overscroll-none"
   >
-    <div class="flex flex-col w-full max-w-xl gap-2 mx-4 bg-white rounded-sm md:mx-auto">
-      <div class="flex justify-between p-5 border-b-black border-b-[1px]">
-        <h1 class="text-3xl font-bold">Edit User</h1>
+    <div
+      class="flex flex-col w-full max-w-[15rem] sm:max-w-[20rem] md:max-w-lg gap-2 mx-4 bg-white rounded-sm md:mx-auto"
+    >
+      <div
+        class="flex justify-between items-center sm:p-3 p-2 md:p-5 border-b-black border-b-[1px]"
+      >
+        <h1 class="font-bold text-md sm:text-lg md:text-xl lg:text-2xl">Edit User</h1>
         <font-awesome-icon
           :icon="['fas', 'times']"
           @click.prevent="closeModal"
-          class="text-3xl cursor-pointer"
+          class="cursor-pointer text-md sm:text-lg md:text-xl lg:text-2xl"
         />
       </div>
-      <div class="flex flex-col gap-6 p-5">
+      <div class="flex flex-col gap-2 p-2 md:p-5 sm:p-3 md:gap-6 sm:gap-3">
         <div class="flex flex-col gap-2">
-          <h1 class="text-2xl font-semibold">Name</h1>
+          <h1 class="font-semibold lg:text-2xl md:text-xl sm:text-lg text-md">Name</h1>
           <input
             type="text"
             v-model="name"
             placeholder="GROUP1"
-            class="border-[1px] border-black p-2 rounded-sm"
+            class="border-[1px] border-black p-1 md:p-2 rounded-sm text-xs sm:text-sm md:text-md lg:text-lg"
           />
         </div>
         <div class="flex flex-col gap-2">
-          <h1 class="text-2xl font-semibold">Email</h1>
+          <h1 class="font-semibold lg:text-2xl md:text-xl sm:text-lg text-md">Email</h1>
           <input
             type="text"
             v-model="email"
             placeholder="GROUP1"
-            class="border-[1px] border-black p-2 rounded-sm"
+            class="border-[1px] border-black p-1 md:p-2 rounded-sm text-xs sm:text-sm md:text-md lg:text-lg"
           />
         </div>
         <div class="flex flex-col gap-2">
-          <h1 class="text-2xl font-semibold">Role</h1>
-          <select v-model="roles" class="p-2 border-[1px] border-black rounded-sm">
+          <h1 class="font-semibold lg:text-2xl md:text-xl sm:text-lg text-md">Role</h1>
+          <select
+            v-model="roles"
+            class="p-1 md:p-2 border-[1px] border-black rounded-sm text-xs sm:text-sm md:text-md lg:text-lg"
+          >
             <option value="User">User</option>
             <option value="Admin">Admin</option>
           </select>
         </div>
-        <button class="p-2 text-white bg-blue-600" @click.prevent="confirmEdit">Update</button>
+        <button
+          class="p-1 text-xs text-white bg-blue-600 md:p-2 sm:text-sm md:text-md lg:text-lg"
+          @click.prevent="confirmEdit"
+        >
+          Update
+        </button>
       </div>
     </div>
   </div>

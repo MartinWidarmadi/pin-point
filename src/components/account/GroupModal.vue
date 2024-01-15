@@ -2,18 +2,20 @@
   <div
     class="fixed top-0 z-50 flex items-center justify-center w-screen h-screen bg-black bg-opacity-80 overscroll-none"
   >
-    <div class="flex flex-col w-full max-w-xl gap-2 mx-4 bg-white rounded-sm md:mx-auto">
-      <div class="flex justify-between items-center mx-4 py-4 border-b-black border-b-[1px]">
-        <h1 class="text-3xl font-bold">Choose Group</h1>
+    <div class="flex flex-col w-full max-w-[15rem] md:max-w-lg mx-4 bg-white rounded-sm md:mx-auto">
+      <div
+        class="flex justify-between items-center mx-2 md:mx-4 py-1 sm:py-2 md:py-4 border-b-black border-b-[1px]"
+      >
+        <h1 class="text-sm font-bold sm:text-md md:text-lg lg:text-xl">Choose Group</h1>
         <font-awesome-icon
           :icon="['fas', 'times']"
           @click.prevent="closeModal"
-          class="text-3xl cursor-pointer"
+          class="text-xl cursor-pointer sm:text-2xl md:text-3xl"
         />
       </div>
-      <div class="flex flex-col gap-6 p-5">
+      <div class="flex flex-col gap-2 p-1 sm:gap-3 md:gap-6 sm:p-3 md:p-5">
         <div class="max-w-xs mx-auto text-center">
-          <h3 class="text-xl font-semibold">
+          <h3 class="text-xs font-semibold md:text-md lg:text-lg sm:text-sm">
             Please choose your group below or
             <span @click.prevent="openModal" class="text-blue-700 cursor-pointer"
               >create a new one</span
@@ -25,36 +27,41 @@
             v-model="searchQuery"
             type="text"
             placeholder="Search"
-            class="transition w-full p-2 text-center bg-[center_left_14rem] bg-no-repeat border-2 border-gray-400 rounded-sm bg-magnifying-glass focus:bg-none ease-out duration-300 outline-none"
+            class="transition w-full p-1 md:p-2 text-center bg-[center_left_9rem] md:bg-[center_left_17rem] text-xs sm:text-sm md:text-md lg:text-lg bg-no-repeat border-[1px] md:border-2 border-gray-400 rounded-sm bg-magnifying-glass focus:bg-none ease-out duration-300 outline-none"
           />
         </div>
-        <div class="flex flex-col gap-2">
+        <div class="flex flex-col gap-1 md:gap-2">
           <div
             v-for="group in filteredGroupList()"
             :key="group.id"
-            class="flex justify-between p-4 shadow-md shadow-gray-400"
+            class="flex items-center justify-between p-1 shadow-md sm:p-2 md:p-4 shadow-gray-400"
           >
             <h3
-              class="text-2xl font-bold cursor-pointer"
+              class="font-bold cursor-pointer text-md sm:text-lg lg:text-2xl md:text-xl"
               @click.prevent="setCurrentGroup(group.name)"
             >
               {{ group.name }}
             </h3>
-            <div class="flex gap-4 text-3xl">
+            <div class="flex gap-1 text-3xl sm:gap-2 md:gap-4">
               <FontAwesomeIcon
                 :icon="['fas', 'pen-to-square']"
-                class="cursor-pointer"
+                class="text-lg cursor-pointer sm:text-xl md:text-2xl"
                 @click.prevent="openEditGroupModal(group.id)"
               />
               <FontAwesomeIcon
                 :icon="['fas', 'trash']"
-                class="cursor-pointer"
+                class="text-lg cursor-pointer sm:text-xl md:text-2xl"
                 @click.prevent="openDeleteGroupModal(group.id)"
               />
             </div>
           </div>
         </div>
-        <button class="p-2 text-white bg-blue-600" @click.prevent="closeModal">Invite</button>
+        <button
+          class="p-1 text-xs text-white bg-blue-600 sm:text-sm md:text-md lg:text-lg md:p-2"
+          @click.prevent="closeModal"
+        >
+          Invite
+        </button>
       </div>
     </div>
   </div>

@@ -2,33 +2,45 @@
   <div
     class="fixed top-0 z-50 flex items-center justify-center w-screen h-screen bg-black bg-opacity-80 overscroll-none"
   >
-    <div class="flex flex-col w-full max-w-xl gap-2 mx-4 bg-white rounded-sm md:mx-auto">
-      <div class="flex justify-between p-5 border-b-black border-b-[1px]">
-        <h1 class="text-3xl font-bold">Add User</h1>
+    <div
+      class="flex flex-col w-full max-w-[15rem] sm:max-w-[20rem] md:max-w-md gap-2 mx-4 bg-white rounded-sm md:mx-auto"
+    >
+      <div
+        class="flex justify-between items-center md:p-5 sm:p-3 p-2 border-b-black border-b-[1px]"
+      >
+        <h1 class="font-bold lg:text-2xl md:text-xl sm:text-lg text-md">Add User</h1>
         <font-awesome-icon
           :icon="['fas', 'times']"
           @click.prevent="closeModal"
-          class="text-3xl cursor-pointer"
+          class="cursor-pointer lg:text-2xl md:text-xl sm:text-lg text-md"
         />
       </div>
-      <div class="flex flex-col gap-6 p-5">
+      <div class="flex flex-col gap-2 p-2 md:gap-6 sm:gap-3 md:p-5 sm:p-3">
         <div class="flex flex-col gap-2">
-          <h1 class="text-3xl font-semibold">Email</h1>
+          <h1 class="font-semibold lg:text-2xl md:text-xl sm:text-lg text-md">Email</h1>
           <input
             v-model="email"
             type="text"
             placeholder="xyz@email.com"
-            class="border-[1px] border-black p-2 rounded-sm"
+            class="border-[1px] border-black md:p-2 p-1 rounded-sm lg:text-lg md:text-md sm:text-sm text-xs"
           />
         </div>
         <div class="flex flex-col gap-2">
-          <h1 class="text-3xl font-semibold">Roles</h1>
-          <select class="p-2 border-[1px] border-black rounded-sm" v-model="roles">
+          <h1 class="font-semibold lg:text-2xl md:text-xl sm:text-lg text-md">Roles</h1>
+          <select
+            class="md:p-2 p-1 border-[1px] border-black rounded-sm lg:text-lg md:text-md sm:text-sm text-xs"
+            v-model="roles"
+          >
             <option value="User">User</option>
             <option value="Admin">Admin</option>
           </select>
         </div>
-        <button class="p-2 text-white bg-blue-600" @click.prevent="handleInvite">Invite</button>
+        <button
+          class="p-1 text-xs text-white bg-blue-600 md:p-2 lg:text-lg md:text-md sm:text-sm"
+          @click.prevent="handleInvite"
+        >
+          Invite
+        </button>
       </div>
     </div>
   </div>

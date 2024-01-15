@@ -45,7 +45,7 @@
     />
 
     <div
-      class="flex flex-col items-start h-[80vh] max-w-lg gap-4 p-5 mx-auto border-2 border-black md:gap-2 -z-50"
+      class="flex flex-col min-h-[42rem] max-w-sm sm:max-w-md md:max-w-lg gap-4 p-2 md:p-5 mx-auto border-2 border-black md:gap-2 -z-50"
     >
       <!-- Navigation section -->
       <div class="flex justify-between w-full">
@@ -58,7 +58,9 @@
               : (groupModalIsOpened = false)
           "
         >
-          <div class="font-semibold text-blue-700">{{ selectedGroup }}</div>
+          <div class="text-sm font-semibold text-blue-700 sm:text-md md:text-lg lg:text-xl">
+            {{ selectedGroup }}
+          </div>
           <font-awesome-icon :icon="['fas', 'chevron-down']"></font-awesome-icon>
         </div>
 
@@ -68,27 +70,27 @@
           v-show="currentUser?.roles == 'Admin'"
           class="flex items-center justify-between gap-2 cursor-pointer"
         >
-          <div class="font-semibold">Invite User</div>
+          <div class="text-sm font-semibold sm:text-md md:text-lg lg:text-xl">Invite User</div>
           <font-awesome-icon :icon="['fas', 'user-plus']"></font-awesome-icon>
         </div>
       </div>
 
       <!-- Search bar section -->
       <div class="flex flex-col items-start w-full">
-        <h2 class="font-bold">Member</h2>
+        <h2 class="text-sm font-bold sm:text-md md:text-lg lg:text-xl">Member</h2>
         <!-- Search bar -->
         <div class="w-full">
           <input
             v-model="searchQuery"
             type="text"
             placeholder="Search"
-            class="transition w-full p-2 text-center bg-[center_left_16.5rem] bg-no-repeat border-2 border-gray-400 rounded-sm bg-magnifying-glass focus:bg-none ease-out duration-300 outline-none"
+            class="text-sm sm:text-md md:text-lg lg:text-xl transition w-full p-1 md:p-2 text-center bg-[center_left_11rem] sm:bg-[center_left_15rem] md:bg-[center_left_16.5rem] bg-no-repeat border-2 border-gray-400 rounded-sm bg-magnifying-glass focus:bg-none ease-out duration-300 outline-none"
           />
         </div>
       </div>
 
       <!-- User list section -->
-      <div class="flex flex-col w-full gap-6">
+      <div class="flex flex-col w-full gap-2 sm:gap-4 md:gap-6">
         <!-- user list -->
         <div
           v-for="user in filteredUser"
@@ -96,36 +98,51 @@
           class="flex items-center justify-between gap-2"
         >
           <!-- user info -->
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 sm:gap-4 md:gap-2">
             <!-- user name and email -->
-            <div class="flex items-center justify-between p-2 shadow-sm min-w-[9rem] shadow-black">
+            <div
+              class="flex items-center justify-between p-1 md:p-2 shadow-sm min-w-[7rem] sm:min-w-[8rem] md:min-w-[9rem] shadow-black"
+            >
               <div class="flex flex-col">
-                <h3 class="font-semibold text-red-700">{{ user.username.toUpperCase() }}</h3>
-                <p class="text-sm text-red-700">{{ user.email }}</p>
+                <h3 class="text-sm font-semibold text-red-700 sm:text-md md:text-lg">
+                  {{ user.username.toUpperCase() }}
+                </h3>
+                <p class="text-xs text-red-700 sm:text-sm">{{ user.email }}</p>
               </div>
             </div>
             <!-- user roles -->
-            <div class="flex items-center p-2 shadow-sm min-w-[9rem] min-h-[3.7rem] shadow-black">
-              <p class="font-semibold text-red-700">{{ user.roles }}</p>
+            <div
+              class="flex items-center p-1 md:p-2 shadow-sm min-w-[3.4rem] sm:min-w-[7rem] md:min-w-[9rem] min-h-[2.7rem] sm:min-h-[3rem] md:min-h-[4rem] shadow-black"
+            >
+              <p class="text-sm font-semibold text-red-700 sm:text-md">{{ user.roles }}</p>
             </div>
           </div>
           <!-- edit and remove button -->
-          <div class="flex items-center gap-2" v-show="currentUser?.roles == 'Admin'">
+          <div
+            class="flex items-center gap-1 sm:gap-2 md:gap-4 lg:gap-2"
+            v-show="currentUser?.roles == 'Admin'"
+          >
             <!-- edit button -->
             <div
-              class="flex flex-col items-center justify-center p-2 bg-blue-200 min-w-[4rem] shadow-sm shadow-black cursor-pointer"
+              class="flex flex-col items-center justify-center p-1 md:p-2 bg-blue-200 min-w-[2rem] min-h-[2.7rem] sm:min-w-[4rem] md:min-w-[4rem] lg:min-w-[5rem] shadow-sm shadow-black cursor-pointer"
               @click.prevent="openEditUserModal(user)"
             >
-              <FontAwesomeIcon :icon="['fas', 'pen-to-square']" />
-              <p>Edit</p>
+              <FontAwesomeIcon
+                :icon="['fas', 'pen-to-square']"
+                class="text-xs sm:text-sm md:text-md lg:text-lg"
+              />
+              <p class="text-xs sm:text-sm md:text-md lg:text-lg">Edit</p>
             </div>
             <!-- remove button -->
             <div
-              class="flex flex-col items-center justify-center p-2 bg-blue-200 min-w-[4rem] shadow-sm shadow-black cursor-pointer"
+              class="flex flex-col items-center justify-center p-1 md:p-2 bg-blue-200 min-w-[2rem] md:min-w-[4rem] shadow-sm shadow-black cursor-pointer min-h-[2.7rem]"
               @click.prevent="openRemoveUserModal(user.id)"
             >
-              <FontAwesomeIcon :icon="['fas', 'user-minus']" />
-              <p>Remove</p>
+              <FontAwesomeIcon
+                :icon="['fas', 'user-minus']"
+                class="text-xs sm:text-sm md:text-md lg:text-lg"
+              />
+              <p class="text-xs sm:text-sm md:text-md lg:text-lg">Remove</p>
             </div>
           </div>
         </div>

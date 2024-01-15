@@ -48,36 +48,50 @@
         <table class="table-auto">
           <thead>
             <tr>
-              <td class="min-w-[7rem] bg-blue-200 rounded-sm border-blue-400 border-2 text-center">
+              <td
+                class="md:min-w-[5rem] sm:min-w-[3rem] min-w-[2rem] bg-blue-200 rounded-sm border-blue-400 border-2 text-center text-xs sm:text-sm md:text-md"
+              >
                 #
               </td>
-              <td class="min-w-[5rem] bg-blue-200 rounded-sm border-blue-400 border-2 text-center">
+              <td
+                class="md:min-w-[5rem] sm:min-w-[3rem] min-w-[2rem] bg-blue-200 rounded-sm border-blue-400 border-2 text-center text-xs sm:text-sm md:text-md"
+              >
                 Date
               </td>
-              <td class="min-w-[5rem] bg-blue-200 rounded-sm border-blue-400 border-2 text-center">
+              <td
+                class="md:min-w-[5rem] sm:min-w-[3rem] min-w-[2rem] bg-blue-200 rounded-sm border-blue-400 border-2 text-center text-xs sm:text-sm md:text-md"
+              >
                 Time
               </td>
-              <td class="min-w-[5rem] bg-blue-200 rounded-sm border-blue-400 border-2 text-center">
+              <td
+                class="md:min-w-[5rem] sm:min-w-[3rem] min-w-[2rem] bg-blue-200 rounded-sm border-blue-400 border-2 text-center text-xs sm:text-sm md:text-md"
+              >
                 User
               </td>
-              <td class="min-w-[5rem] bg-blue-200 rounded-sm border-blue-400 border-2 text-center">
+              <td
+                class="md:min-w-[5rem] sm:min-w-[3rem] min-w-[2rem] bg-blue-200 rounded-sm border-blue-400 border-2 text-center text-xs sm:text-sm md:text-md"
+              >
                 Location
               </td>
             </tr>
           </thead>
           <tbody>
             <tr v-for="activity in filteredActivitiesByUser" :key="activity.id">
-              <td class="text-xs text-center border-2 border-blue-400">
+              <td class="text-xs text-center border-2 border-blue-400 sm:text-sm md:text-md">
                 {{ filteredActivitiesByUser.indexOf(activity) + 1 }}
               </td>
-              <td class="text-xs text-center border-2 border-blue-400">
+              <td class="text-xs text-center border-2 border-blue-400 sm:text-sm md:text-md">
                 {{ milisecondEpochToDateString(activity.dateTime) }}
               </td>
-              <td class="text-xs text-center border-2 border-blue-400">
+              <td class="text-xs text-center border-2 border-blue-400 sm:text-sm md:text-md">
                 {{ milisecondEpochToTimeString(activity.dateTime) }}
               </td>
-              <td class="text-xs text-center border-2 border-blue-400">{{ activity.username }}</td>
-              <td class="p-1 text-xs text-center text-blue-800 border-2 border-blue-400">
+              <td class="text-xs text-center border-2 border-blue-400 sm:text-sm md:text-md">
+                {{ activity.username }}
+              </td>
+              <td
+                class="p-1 text-xs text-center text-blue-800 border-2 border-blue-400 sm:text-sm md:text-md"
+              >
                 {{ activity.address.split(',')[0] }}
               </td>
             </tr>

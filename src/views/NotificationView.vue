@@ -4,13 +4,15 @@
     <div class="pt-5 h-[74vh]">
       <div class="min-w-[13rem] min-h-[29rem] flex flex-col gap-2">
         <div v-for="date in filterByDate" :key="date" class="flex flex-col items-start gap-2">
-          <h2 class="text-xl font-semibold">{{ labelDate(date) }}</h2>
+          <h2 class="font-semibold lg:text-2xl md:text-xl sm:text-lg text-md">
+            {{ labelDate(date) }}
+          </h2>
           <div
             v-for="notification in filterNotificationByCurrentUser"
             :key="notification.id"
             class="flex flex-col items-start w-full gap-2 p-4 border-2 border-gray-300 rounded-sm"
           >
-            <h3 class="font-semibold">
+            <h3 class="font-semibold lg:text-2xl md:text-xl sm:text-lg text-md">
               {{ `${notification.senderName} ${notification.description}` }}
             </h3>
             <div class="flex items-center justify-between w-full">
@@ -18,10 +20,14 @@
                 <table>
                   <tbody>
                     <tr>
-                      <td>Group Name</td>
-                      <td>: {{ notification.group }}</td>
+                      <td>
+                        <p class="text-xs sm:text-sm md:text-md">Group Name</p>
+                      </td>
+                      <td>
+                        <p class="text-xs sm:text-sm md:text-md">: {{ notification.group }}</p>
+                      </td>
                     </tr>
-                    <tr>
+                    <tr class="text-xs sm:text-sm md:text-md">
                       <td>Role</td>
                       <td>: {{ notification.roles }}</td>
                     </tr>
@@ -30,12 +36,14 @@
               </div>
               <div class="flex items-center justify-between gap-4">
                 <button
-                  class="p-2 text-white bg-blue-600 rounded"
+                  class="p-2 text-xs text-white bg-blue-600 rounded sm:text-sm md:text-md"
                   @click.prevent="addUserToGroup(notification.userId, notification.group)"
                 >
                   Accept
                 </button>
-                <p>{{ substractTime(new Date().getTime(), notification.dateTime) }}</p>
+                <p class="text-xs sm:text-sm md:text-md">
+                  {{ substractTime(new Date().getTime(), notification.dateTime) }}
+                </p>
               </div>
             </div>
           </div>

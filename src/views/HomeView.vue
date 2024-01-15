@@ -42,9 +42,7 @@
 
     <!-- Activity -->
     <div class="pt-5">
-      <div
-        class="min-w-[13rem] h-[74vh] sm:h-[70vh] md:h-[71vh] lg:h-[72vh] flex flex-col gap-2 justify-center items-center"
-      >
+      <div class="min-w-[13rem] flex flex-col gap-2 justify-center items-center">
         <div
           v-if="filteredActivitiesByUser.length === 0"
           class="flex items-center justify-center w-full h-screen p-2 text-3xl font-bold border-2 border-black rounded-md"
@@ -65,21 +63,21 @@
                 :icon="['fas', 'circle-user']"
                 class="text-lg sm:text-xl md:text-3xl lg:text-5xl"
               />
-              <div class="text-2xl font-bold">{{ activity.username }}</div>
+              <div class="font-bold text-md sm:text-lg md:text-xl">{{ activity.username }}</div>
             </div>
             <div>
-              <p class="text-sm font-bold">{{ activity.email }}</p>
-              <p class="text-xl font-bold">{{ activity.group }}</p>
+              <p class="text-xs font-bold sm:text-sm">{{ activity.email }}</p>
+              <p class="font-bold text-md sm:text-lg md:text-xl">{{ activity.group }}</p>
             </div>
           </div>
           <!-- Feeds Photo -->
           <div>
-            <h3 class="text-2xl font-bold">Photo</h3>
+            <h3 class="text-lg font-bold sm:text-xl md:text-2xl">Photo</h3>
             <img :src="activity.photoUrl" />
           </div>
           <!-- Feeds Location -->
           <div>
-            <h3 class="text-2xl font-bold">Location</h3>
+            <h3 class="text-lg font-bold sm:text-xl md:text-2xl">Location</h3>
             <p>Latitude {{ activity.latLng.lat() }}</p>
             <p>Longitude {{ activity.latLng.lng() }}</p>
           </div>
@@ -87,12 +85,12 @@
           <div class="flex justify-between">
             <!-- Tag -->
             <div>
-              <h3 class="text-2xl font-bold">Tag Location</h3>
+              <h3 class="text-lg font-bold sm:text-xl md:text-2xl">Tag Location</h3>
               <p>{{ activity.tag.name }}</p>
             </div>
             <!-- Time -->
             <div class="text-right">
-              <h4 class="text-xl font-bold">
+              <h4 class="text-sm font-bold sm:text-md md:text-lg">
                 {{ milisecondEpochToDateString(activity.dateTime) }}
               </h4>
               <p>{{ milisecondEpochToTimeString(activity.dateTime) }}</p>

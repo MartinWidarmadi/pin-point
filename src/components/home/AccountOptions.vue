@@ -2,8 +2,11 @@
   <Menu as="div" class="relative inline-block text-left">
     <div>
       <MenuButton class="flex items-center justify-between gap-1">
-        <p class="text-xl">{{ currentUser?.username }}</p>
-        <FontAwesomeIcon :icon="['fas', 'chevron-down']" class="text-lg" />
+        <p class="text-xs sm:text-md md:text-lg lg:text-xl">{{ currentUser?.username }}</p>
+        <FontAwesomeIcon
+          :icon="['fas', 'chevron-down']"
+          class="text-xs md:text-md sm:text-sm lg:text-lg"
+        />
       </MenuButton>
     </div>
 
@@ -15,11 +18,18 @@
       leave-from-class="transform scale-100 opacity-100"
       leave-to-class="transform scale-95 opacity-0"
     >
-      <MenuItems class="absolute bg-white border-2 border-black rounded-sm -left-5">
-        <MenuItem @click.prevent="logout" class="flex items-center gap-4 p-2 hover:bg-blue-300">
+      <MenuItems
+        class="absolute bg-white border-2 border-black rounded-sm -left-3 sm:-left-2 md:-left-3 lg:-left-2"
+      >
+        <MenuItem
+          @click.prevent="logout"
+          class="flex items-center gap-4 p-1 sm:p-2 sm:gap-2 hover:bg-blue-300"
+        >
           <button>
-            Logout
-            <FontAwesomeIcon :icon="['fas', 'arrow-right-from-bracket']" />
+            <div class="flex items-center gap-2">
+              <p class="text-xs sm:text-sm md:text-md lg:text-lg">Logout</p>
+              <FontAwesomeIcon :icon="['fas', 'arrow-right-from-bracket']" class="text-xs" />
+            </div>
           </button>
         </MenuItem>
       </MenuItems>
