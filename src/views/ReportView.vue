@@ -36,7 +36,9 @@
           :icon="['fas', 'user']"
           class="text-lg lg:text-3xl md:text-2xl sm:text-xl"
         />
-        <p class="text-sm text-red-700 sm:text-md md:text-lg">{{ currentUser?.username }}</p>
+        <p class="text-sm text-red-700 sm:text-md md:text-lg">
+          {{ selectedUserId.length <= 1 ? currentUser?.username : 'Multiple Users' }}
+        </p>
       </div>
     </div>
 
@@ -124,21 +126,28 @@ const filterUserActivities = () => {
   if (currentUser?.roles === 'user') {
     filteredActivitiesByUser.value = filterByDate(
       currentDate,
-      userData.filter((activity) => activity.id === currentUser.id)
+      userData.filter((activity) => activity.userId === currentUser.id)
     )
   } else {
     filteredActivitiesByUser.value =
       selectedUserId.value.length > 0
         ? filterByDate(
             currentDate,
-            userData.filter((activity) => selectedUserId.value.includes(activity.id))
+            userData.filter((activity) => selectedUserId.value.includes(activity.userId))
           )
         : filterByDate(currentDate, userData)
   }
 }
 
+const filteUserActivitiesOnMounted = () => {
+  filteredActivitiesByUser.value = filterByDate(
+    currentDate,
+    userData.filter((activity) => activity.userId === currentUser!.id)
+  )
+}
+
 onMounted(() => {
-  filterUserActivities() // Initial filter
+  filteUserActivitiesOnMounted() // Initial filter
 })
 
 watch([() => currentDate.startDate, () => currentDate.endDate, () => selectedUserId.value], () => {

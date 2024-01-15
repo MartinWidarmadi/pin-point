@@ -30,6 +30,7 @@
 <script setup lang="ts">
 import { defineEmits, ref } from 'vue'
 import { useGroupStore } from '@/stores/group'
+import { useToast } from 'vue-toastification'
 
 const emit = defineEmits(['closeModal'])
 
@@ -38,6 +39,8 @@ const groupName = ref('')
 
 const closeModal = () => {
   addGroup({ id: groupList.length + 1, name: groupName.value })
+  groupName.value = ''
+  useToast().success('Create group success')
   emit('closeModal', false)
 }
 </script>

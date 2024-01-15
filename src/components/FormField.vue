@@ -6,7 +6,7 @@
         :id="id"
         :type="type"
         :placeholder="placeholder"
-        class="border-2 border-slate-400 md:w-64 lg:w-[19rem] px-2"
+        class="text-xs sm:text-sm md:text-md lg:text-lg border-2 border-slate-400 md:w-64 lg:w-[19rem] p-1"
         :value="modelValue"
         @input="$emit('update:modelValue', ($event.target as HTMLButtonElement).value)"
       />

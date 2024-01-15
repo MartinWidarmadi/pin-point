@@ -42,12 +42,30 @@ export const useDateStore = defineStore('date', () => {
     return new Date(milisecondEpoch).setHours(23, 59, 59, 999)
   }
 
+  const substractTime = (today: number, time: number): string => {
+    const hoursToMinuteToday = new Date(today).getHours() * 60
+    const getMinuteToday = new Date(today).getMinutes()
+    const minutesToday = hoursToMinuteToday + getMinuteToday
+
+    const hoursToMinuteNow = new Date(time).getHours() * 60
+    const getMinuteNow = new Date(time).getMinutes()
+    const minutesNow = hoursToMinuteNow + getMinuteNow
+
+    const minutes = minutesToday - minutesNow
+
+    if (minutes > 59) {
+      return `${Math.round(minutes / 60)} Jam`
+    }
+    return `${minutes} Menit`
+  }
+
   return {
     currentDate,
     formatDateToString,
     milisecondEpochToDateString,
     milisecondEpochToTimeString,
     getStartOfDayFromMilisecondEpoch,
-    getEndOfDayFromMilisecondEpoch
+    getEndOfDayFromMilisecondEpoch,
+    substractTime
   }
 })

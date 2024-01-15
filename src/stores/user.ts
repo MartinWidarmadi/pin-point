@@ -1,7 +1,11 @@
-import { defineStore } from 'pinia'
+import { defineStore, storeToRefs } from 'pinia'
 import { type Tag } from './tagData'
 import '@googlemaps/js-api-loader'
 import { ref, type Ref } from 'vue'
+import { useGroupStore } from './group'
+import router from '@/router'
+import { useToast } from 'vue-toastification'
+
 export interface UserData {
   id: number
   userId: number
@@ -25,6 +29,8 @@ export interface UserList {
 }
 
 export const useUserStore = defineStore('user', () => {
+  const { selectedGroup } = storeToRefs(useGroupStore())
+
   const userList: Ref<UserList[]> = ref([
     {
       id: 1,
@@ -41,6 +47,14 @@ export const useUserStore = defineStore('user', () => {
       password: 'user',
       roles: 'User',
       group: 'Cabang Bandung'
+    },
+    {
+      id: 3,
+      email: 'ariel@email.com',
+      username: 'Ariel',
+      password: 'user',
+      roles: 'User',
+      group: ''
     }
   ])
 
@@ -62,5 +76,15 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
-  return { userList, userData, editUserList, removeUserFromGroup }
+  const addUserToGroup = (id: number, group: string) => {
+    const index = userList.value.findIndex((user) => user.id === id)
+    if (index !== -1) {
+      userList.value[index].group = group
+      selectedGroup.value = group
+      useToast().success(`Success to join group ${group}`)
+      router.push({ name: 'home' })
+    }
+  }
+
+  return { userList, userData, editUserList, removeUserFromGroup, addUserToGroup }
 })

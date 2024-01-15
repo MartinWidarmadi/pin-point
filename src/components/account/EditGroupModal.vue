@@ -30,6 +30,7 @@
 <script setup lang="ts">
 import { defineEmits, defineProps, ref } from 'vue'
 import { useGroupStore } from '@/stores/group'
+import { useToast } from 'vue-toastification'
 
 const emit = defineEmits(['closeModal'])
 const props = defineProps({
@@ -46,6 +47,8 @@ const closeModal = () => {
 
 const confirmEdit = () => {
   editGroup(props.groupId!, name.value)
+  name.value = ''
+  useToast().success('Edit group success')
   closeModal()
 }
 </script>

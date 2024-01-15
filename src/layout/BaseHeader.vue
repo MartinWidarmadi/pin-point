@@ -5,10 +5,11 @@
     >
       <h1 class="text-lg font-semibold md: lg:text-3xl md:text-2xl sm:text-xl">Logo</h1>
       <div class="flex items-center justify-center gap-2 sm:gap-3 md:gap-4">
-        <router-link to="/">
+        <router-link to="/notification">
           <font-awesome-icon
             :icon="['fas', 'bell']"
             class="text-lg sm:text-xl md:text-2xl lg:text-3xl"
+            :class="{ 'text-blue-400': $router.currentRoute.value.path === '/notification' }"
           />
         </router-link>
         <router-link v-show="$router.currentRoute.value.path === '/'" to="report">

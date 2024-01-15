@@ -28,20 +28,20 @@
       <p v-if="!cameraIsOn">
         <font-awesome-icon :icon="['fas', 'camera']" class="text-7xl"></font-awesome-icon>
       </p>
+      <p v-else-if="capturedImage">
+        <img :src="capturedImage" alt="" />
+      </p>
       <p v-else>
         <video ref="videoElement" class="w-full h-auto" autoplay></video>
       </p>
     </div>
-
-    <!-- Display captured image -->
-    <img v-if="capturedImage" :src="capturedImage" alt="Captured Image" class="w-full h-auto" />
 
     <!-- Capture button -->
     <button
       class="min-w-full p-1 text-center text-white bg-blue-800 md:p-2 text-md sm:text-lg md:text-xl"
       @click.prevent="captureImage"
     >
-      Capture
+      {{ capturedImage ? 'Retake' : 'Capture' }}
     </button>
   </div>
 </template>
@@ -52,8 +52,8 @@ import { onBeforeUnmount, onMounted, ref, watchEffect, defineEmits } from 'vue'
 
 // Constants
 const cameras = [
-  { id: 1, name: 'FRONT CAMERA', type: 'front' },
-  { id: 2, name: 'BACK CAMERA', type: 'back' }
+  { id: 1, name: 'FRONT CAMERA', type: 'user' },
+  { id: 2, name: 'BACK CAMERA', type: 'environment' }
 ]
 
 // Reactive variables
@@ -87,6 +87,9 @@ const startCamera = async () => {
 }
 
 const captureImage = () => {
+  if (capturedImage.value) {
+    capturedImage.value = null
+  }
   if (videoElement.value) {
     const canvas = document.createElement('canvas')
     const context = canvas.getContext('2d')

@@ -2,7 +2,7 @@
   <section id="attendance">
     <TagModal v-show="modalIsOpened" @showModal="showModal" />
     <div
-      class="flex flex-col items-start max-w-lg gap-3 p-5 mx-auto border-2 border-black md:gap-2 -z-50"
+      class="flex flex-col items-start max-w-md gap-3 p-5 mx-auto border-2 border-black md:max-w-lg md:gap-2 -z-50"
     >
       <!-- photo section -->
       <PhotoSection @storePhotoUrl="storePhotoUrl" />
@@ -32,7 +32,7 @@ import TagModal from '@/components/attendance/TagModal.vue'
 import { useUserStore } from '@/stores/user'
 import { useAuthStore } from '@/stores/auth'
 import { ref, type Ref, defineEmits } from 'vue'
-import { useToast, POSITION } from 'vue-toastification'
+import { useToast } from 'vue-toastification'
 import { type UserData } from '@/stores/user'
 import { type Tag } from '@/stores/tagData'
 import '@googlemaps/js-api-loader'
@@ -48,23 +48,6 @@ const { currentUser } = useAuthStore()
 
 const toast = useToast()
 const emits = defineEmits(['latLngData'])
-
-const showToast = (type: 'success' | 'error') => {
-  const options = {
-    position: POSITION.BOTTOM_RIGHT,
-    timeout: 2000,
-    closeOnClick: true,
-    pauseOnFocusLoss: false,
-    draggable: true,
-    draggablePercent: 60,
-    showCloseButtonOnHover: false,
-    hideProgressBar: true,
-    closeButton: 'button',
-    title: type === 'success' ? 'Success' : 'Error',
-    description: type === 'success' ? 'Data has been saved' : 'Data has not been saved' //
-  }
-  toast[type](options)
-}
 
 const storePhotoUrl = (url: string) => {
   photoUrl.value = url
@@ -91,6 +74,15 @@ const getCurrentDateTime = () => {
   return new Date().getTime()
 }
 
+const errorHandler = () => {
+  if (!photoUrl.value) {
+    return 'Please upload a photo'
+  } else if (!latLngData.value) {
+    return 'Please select a location'
+  }
+  return 'Please select a tag'
+}
+
 const handleSubmit = () => {
   if (photoUrl.value && latLngData.value && tagData.value) {
     const userData: UserData = {
@@ -107,8 +99,7 @@ const handleSubmit = () => {
     }
 
     userStore.userData.push(userData)
-    showToast('success')
-
+    toast.success('Create Success')
     router.push({ name: 'home' })
 
     // Reset values
@@ -116,7 +107,7 @@ const handleSubmit = () => {
     photoUrl.value = undefined
     tagData.value = undefined
   } else {
-    showToast('error')
+    toast.error(errorHandler())
   }
 }
 </script>

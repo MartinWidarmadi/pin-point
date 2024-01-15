@@ -46,6 +46,7 @@
 <script setup lang="ts">
 import { defineEmits, defineProps, ref, watch } from 'vue'
 import { useUserStore, type UserList } from '@/stores/user'
+import { useToast } from 'vue-toastification'
 
 const emit = defineEmits(['closeModal'])
 const prop = defineProps({
@@ -79,6 +80,7 @@ const confirmEdit = () => {
   name.value = ''
   email.value = ''
   roles.value = ''
+  useToast().success('Edit success')
   closeModal()
 }
 </script>

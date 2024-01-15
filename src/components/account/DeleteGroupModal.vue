@@ -32,6 +32,7 @@
 import { defineEmits, defineProps, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useGroupStore } from '@/stores/group'
+import { useToast } from 'vue-toastification'
 
 const emit = defineEmits(['closeModal'])
 const props = defineProps({
@@ -50,6 +51,7 @@ const closeModal = () => {
 const confirmDelete = () => {
   if (currentUser?.password === password.value) {
     removeGroup(props.groupId!)
+    useToast().success('Delete group success')
     closeModal()
   }
 }

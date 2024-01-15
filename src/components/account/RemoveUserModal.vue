@@ -23,6 +23,7 @@
 <script setup lang="ts">
 import { defineEmits, defineProps } from 'vue'
 import { useUserStore } from '@/stores/user'
+import { useToast } from 'vue-toastification'
 
 const { removeUserFromGroup } = useUserStore()
 
@@ -37,6 +38,7 @@ const closeModal = () => {
 
 const confirmRemove = () => {
   removeUserFromGroup(prop.userId!)
+  useToast().success('Delete success')
   closeModal()
 }
 </script>

@@ -11,14 +11,14 @@
       >
         <div class="flex items-center">
           <input
-            :id="data.id"
+            :id="data.id.toString()"
             type="radio"
             :value="data"
             class="text-sm bg-gray-500 border-[1px] border-black me-1"
             name="address"
             v-model="selectedTag"
           />
-          <label :for="data.id" :value="data.name">{{ data.name }}</label>
+          <label :for="data.id.toString()" :value="data.name">{{ data.name }}</label>
         </div>
       </div>
       <button

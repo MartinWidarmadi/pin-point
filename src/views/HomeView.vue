@@ -42,7 +42,9 @@
 
     <!-- Activity -->
     <div class="pt-5">
-      <div class="min-w-[13rem] min-h-[29rem] flex flex-col gap-2 justify-center items-center">
+      <div
+        class="min-w-[13rem] h-[74vh] sm:h-[70vh] md:h-[71vh] lg:h-[72vh] flex flex-col gap-2 justify-center items-center"
+      >
         <div
           v-if="filteredActivitiesByUser.length === 0"
           class="flex items-center justify-center w-full h-screen p-2 text-3xl font-bold border-2 border-black rounded-md"

@@ -2,7 +2,7 @@ import './assets/main.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import Toast from 'vue-toastification'
+import Toast, { POSITION, TYPE } from 'vue-toastification'
 import 'vue-toastification/dist/index.css'
 
 import App from './App.vue'
@@ -48,12 +48,39 @@ library.add(
   faCircleExclamation
 )
 
+const toastOptions = {
+  toastDefaults: {
+    [TYPE.ERROR]: {
+      position: POSITION.BOTTOM_RIGHT,
+      timeout: 2000,
+      closeOnClick: true,
+      pauseOnFocusLoss: false,
+      draggable: true,
+      draggablePercent: 60,
+      showCloseButtonOnHover: false,
+      hideProgressBar: true,
+      closeButton: 'button'
+    },
+    [TYPE.SUCCESS]: {
+      position: POSITION.BOTTOM_RIGHT,
+      timeout: 2000,
+      closeOnClick: true,
+      pauseOnFocusLoss: false,
+      draggable: true,
+      draggablePercent: 60,
+      showCloseButtonOnHover: false,
+      hideProgressBar: true,
+      closeButton: 'button'
+    }
+  }
+}
+
 const app = createApp(App)
 
 // app.use(Vue3Geolocation)
 app.use(createPinia())
 app.use(router)
-app.use(Toast)
+app.use(Toast, toastOptions)
 
 app.component('font-awesome-icon', FontAwesomeIcon)
 
